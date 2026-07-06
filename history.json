@@ -1,0 +1,32 @@
+{
+  "robot_status": "RDY",
+  "cats": {
+    "Shiv": {
+      "weight": 15.35,
+      "birthday": "2023-04-02",
+      "age": "Unknown"
+    },
+    "Baby": {
+      "weight": 7.21,
+      "birthday": "2023-04-02",
+      "age": "Unknown"
+    }
+  },
+  "history": [
+    {
+      "date": "2026-07-06",
+      "cats": {
+        "Shiv": {
+          "visits": 0,
+          "times": [],
+          "weight": 15.35
+        },
+        "Baby": {
+          "visits": 0,
+          "times": [],
+          "weight": 7.21
+        }
+      }
+    }
+  ]
+}
