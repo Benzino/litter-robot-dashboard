@@ -1,0 +1,38 @@
+name: Hourly Litter-Robot Sync
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+  workflow_dispatch:     # Allows manual trigger button
+
+jobs:
+  run-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    # Required to allow GitHub to save the data.json file
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Set up Python Environment
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install Libraries
+      run: pip install pylitterbot asyncio
+
+    - name: Run Script
+      env:
+        WHISKER_EMAIL: ${{ secrets.WHISKER_EMAIL }}
+        WHISKER_PASSWORD: ${{ secrets.WHISKER_PASSWORD }}
+      run: python litterbot_sync.py
+
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "LitterRobotBot"
+        git config --global user.email "bot@github.com"
+        git add data.json
+        # Only commit if data actually changed to prevent empty error loops
+        git diff-index --quiet HEAD || git commit -m "Automated hourly database update"
+        git push
