@@ -3,252 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Litter-Robot 4 Command Center</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Litter-Robot Dashboard</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: #f7fafc; color: #2d3748; margin: 0; padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        
-        .top-bar {
-            background: white; padding: 15px 20px; border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
-        select { padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: 1px solid #cbd5e0; background: white; cursor: pointer;}
-        
-        /* Stats Widget Deck Layout */
-        .telemetry-row {
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        /* Robot Status Section */
+        .status-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-label { font-size: 12px; color: #718096; text-transform: uppercase; }
+        .stat-value { font-size: 18px; font-weight: bold; margin-top: 5px; }
+
+        /* Cat Grid Section */
+        #statCats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px; margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
-        .metric-card {
-            background: white; padding: 20px; border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: center;
+        .cat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .metric-card p { margin: 0; color: #718096; font-size: 12px; text-transform: uppercase; font-weight: 600; }
-        .metric-card h3 { margin: 10px 0 0 0; font-size: 24px; color: #1a202c; font-weight: 700; }
-        
-        .main-layout { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 1000px) { .main-layout { grid-template-columns: 2fr 1fr; } }
-        .charts-subgrid { display: grid; grid-template-columns: 1fr; gap: 25px; }
-        @media (min-width: 600px) { .charts-subgrid { grid-template-columns: 1fr 1fr; } }
-
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
-        .card.full-width { grid-column: span 1; }
-        @media (min-width: 600px) { .card.full-width { grid-column: span 2; } }
-        .card h2 { font-size: 13px; text-transform: uppercase; color: #718096; margin-top: 0; letter-spacing: 0.5px; }
-        .chart-frame { position: relative; height: 280px; width: 100%; }
-
-        .log-table-wrapper { max-height: 500px; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-        th { background: #f7fafc; position: sticky; top: 0; padding: 10px; color: #4a5568; }
-        td { padding: 10px; border-bottom: 1px solid #edf2f7; }
-        
-        .cat-badge-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; justify-content: center; }
-        .cat-profile-tag { background: #edf2f7; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+        .cat-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #cbd5e0;
+            background-color: #eee;
+        }
+        .cat-info h3 { margin: 0 0 5px 0; font-size: 18px; }
+        .cat-info p { margin: 2px 0; font-size: 13px; color: #4a5568; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="top-bar">
-        <h2 style="margin:0; font-size:18px;" id="robotNameDisplay">Litter-Robot Command Center</h2>
-        <select id="timeFilter" onchange="processAndRenderData()">
-            <option value="1" selected>Today Only</option>
-            <option value="7">Last 7 Days</option>
-            <option value="30">Last 30 Days</option>
-            <option value="all">All History</option>
-        </select>
-    </div>
+    <header>
+        <h1>Litter-Robot Dashboard</h1>
+    </header>
 
-    <!-- Telemetry Row Counter Cards -->
-    <div class="telemetry-row">
-        <div class="metric-card">
-            <p>WiFi Connection</p>
-            <h3 id="statWifi" style="color: #48bb78;">Syncing...</h3>
+    <!-- Robot Status -->
+    <div class="status-box">
+        <div class="stat-item">
+            <span class="stat-label">Robot</span>
+            <div id="robotNameDisplay" class="stat-value">-</div>
         </div>
-        <div class="metric-card">
-            <p>Current Litter Level</p>
-            <h3 id="statLitter">--</h3>
+        <div class="stat-item">
+            <span class="stat-label">WiFi</span>
+            <div id="statWifi" class="stat-value">-</div>
         </div>
-        <div class="metric-card">
-            <p>Total Life Cycles</p>
-            <h3 id="statCycles">--</h3>
+        <div class="stat-item">
+            <span class="stat-label">Litter</span>
+            <div id="statLitter" class="stat-value">-</div>
         </div>
-        <div class="metric-card" style="min-width: 260px;">
-            <p>Registered Cat Profiles</p>
-            <div class="cat-badge-list" id="statCats">No active profiles</div>
+        <div class="stat-item">
+            <span class="stat-label">Cycles</span>
+            <div id="statCycles" class="stat-value">-</div>
         </div>
     </div>
 
-    <div class="main-layout">
-        <!-- Graphs Block -->
-        <div class="charts-subgrid">
-            <div class="card full-width">
-                <h2>Cat Weight Trends (kg)</h2>
-                <div class="chart-frame"><canvas id="chartWeights"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Daily Traffic Volume</h2>
-                <div class="chart-frame"><canvas id="chartDaily"></canvas></div>
-            </div>
-            <div class="card">
-                <h2>Hourly Activity Density</h2>
-                <div class="chart-frame"><canvas id="chartHourly"></canvas></div>
-            </div>
-        </div>
-
-        <!-- History Block -->
-        <div class="card">
-            <h2>System Activity & Status Log</h2>
-            <div class="log-table-wrapper">
-                <table>
-                    <thead><tr><th>Time</th><th>Event / Status</th></tr></thead>
-                    <tbody id="logTableBody"></tbody>
-                </table>
-            </div>
-        </div>
+    <!-- Cats Grid -->
+    <div id="statCats">
+        <!-- Cards will be injected here -->
+        <p>Loading cat data...</p>
     </div>
 </div>
 
 <script>
-let databaseRoot = { robot_metadata: {}, pet_profiles: [], logs: [] };
-let instanceW = null, instanceD = null, instanceH = null;
-
-document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const response = await fetch('./data.json');
-        if (!response.ok) throw new Error("Data map connection lost.");
-        databaseRoot = await response.json();
-        
-        // Ensure log array boundaries exist safely
-        if(!databaseRoot.logs) databaseRoot.logs = [];
-        
-        // Sort timeline descending for chronological extraction processing loops
-        databaseRoot.logs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-        
-        renderTelemetryWidgets(databaseRoot);
-        processAndRenderData();
-    } catch (e) {
-        document.getElementById("statWifi").textContent = "Offline";
-        document.getElementById("statWifi").style.color = "#e53e3e";
-    }
-});
-
-function renderTelemetryWidgets(payload) {
-    const meta = payload.robot_metadata || {};
-    if(meta.name) document.getElementById("robotNameDisplay").textContent = meta.name;
-    
-    // 1. Process Online State Indicators
-    const wifiEl = document.getElementById("statWifi");
-    const onlineState = meta.is_online;
-    if(onlineState === true || onlineState === "True") {
-        wifiEl.textContent = "Connected"; wifiEl.style.color = "#48bb78";
-    } else {
-        wifiEl.textContent = "Disconnected"; wifiEl.style.color = "#e53e3e";
-    }
-
-    // 2. Process Litter Levels & Cycle Totals
-    document.getElementById("statLitter").textContent = meta.litter_level !== undefined ? meta.litter_level : "Unknown";
-    document.getElementById("statCycles").textContent = meta.cycle_count !== undefined ? meta.cycle_count : "Unknown";
-
-    // 3. Render Profile Badges
-    const catsContainer = document.getElementById("statCats");
-    if(payload.pet_profiles && payload.pet_profiles.length > 0) {
-        catsContainer.innerHTML = "";
-        payload.pet_profiles.forEach(cat => {
-            const span = document.createElement("span");
-            span.className = "cat-profile-tag";
-            span.textContent = `${cat.name} (${cat.latest_weight} kg)`;
-            catsContainer.appendChild(span);
-        });
-    }
-}
-
-function processAndRenderData() {
-    const logsList = databaseRoot.logs || [];
-    if (logsList.length === 0) return;
-    
-    const timeframe = document.getElementById("timeFilter").value;
-    let filtered = [...logsList].map(item => ({...item, dateObj: new Date(item.timestamp)}));
-    
-    if (timeframe !== 'all') {
-        const boundary = new Date();
-        boundary.setDate(boundary.getDate() - parseInt(timeframe));
-        if (timeframe === "1") boundary.setHours(0,0,0,0); // Reset hour boundary index mapping for Today filter execution
-        filtered = filtered.filter(item => item.dateObj >= boundary);
-    }
-
-    const chronological = [...filtered].sort((a,b) => a.dateObj - b.dateObj);
-
-    if (instanceW) instanceW.destroy();
-    if (instanceD) instanceD.destroy();
-    if (instanceH) instanceH.destroy();
-
-    const logTableBody = document.getElementById("logTableBody");
-    logTableBody.innerHTML = "";
-    
-    const hourlyDistribution = Array(24).fill(0);
-    const dayFrequency = {};
-    const chartLabels = [];
-    const catA = [], catB = [];
-
-    filtered.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${item.dateObj.toLocaleDateString()} ${item.dateObj.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
-                         <td><strong>${item.event.toUpperCase().replace(/_/g, ' ')}</strong> ${item.weight ? `(${item.weight} kg)` : ''}</td>`;
-        logTableBody.appendChild(row);
-    });
-
-    chronological.forEach(item => {
-        if (item.weight) {
-            chartLabels.push(item.dateObj.toLocaleDateString() + " " + item.dateObj.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
-            if (item.weight < 5.0) {
-                catA.push(item.weight); catB.push(null);
-            } else {
-                catB.push(item.weight); catA.push(null);
-            }
+    async function loadDashboard() {
+        try {
+            const response = await fetch('data.json?t=' + new Date().getTime());
+            const payload = await response.json();
+            renderTelemetryWidgets(payload);
+        } catch (error) {
+            console.error("Error loading data:", error);
+            document.getElementById('statCats').innerHTML = "<p>Could not load data. Ensure sync has run.</p>";
         }
-        hourlyDistribution[item.dateObj.getHours()]++;
-        const dayKey = item.dateObj.toISOString().split('T')[0];
-        dayFrequency[dayKey] = (dayFrequency[dayKey] || 0) + 1;
-    });
+    }
 
-    instanceW = new Chart(document.getElementById("chartWeights").getContext("2d"), {
-        type: 'line',
-        data: {
-            labels: chartLabels,
-            datasets: [
-                { label: 'Cat A (< 5kg)', data: catA, borderColor: '#4299e1', spanGaps: true, pointRadius: 3 },
-                { label: 'Cat B (> 5kg)', data: catB, borderColor: '#ed64a6', spanGaps: true, pointRadius: 3 }
-            ]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+    function renderTelemetryWidgets(payload) {
+        const meta = payload.robot_metadata || {};
+        
+        // Robot Status
+        document.getElementById("robotNameDisplay").textContent = meta.name || "Unknown";
+        
+        const wifiEl = document.getElementById("statWifi");
+        const isOnline = (meta.is_online === true || meta.is_online === "True");
+        wifiEl.textContent = isOnline ? "Connected" : "Offline";
+        wifiEl.style.color = isOnline ? "#48bb78" : "#e53e3e";
 
-    const sortedDays = Object.keys(dayFrequency).sort();
-    instanceD = new Chart(document.getElementById("chartDaily").getContext("2d"), {
-        type: 'line',
-        data: {
-            labels: sortedDays.map(d => d.substring(5)),
-            datasets: [{ label: 'Total Logs', data: sortedDays.map(d => dayFrequency[d]), borderColor: '#805ad5', fill: false }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+        document.getElementById("statLitter").textContent = meta.litter_level ?? "N/A";
+        document.getElementById("statCycles").textContent = meta.cycle_count ?? "N/A";
 
-    instanceH = new Chart(document.getElementById("chartHourly").getContext("2d"), {
-        type: 'bar',
-        data: {
-            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-            datasets: [{ label: 'Activity Index', data: hourlyDistribution, backgroundColor: '#48bb78' }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-}
+        // Cats Section
+        const catsContainer = document.getElementById("statCats");
+        if(payload.pet_profiles && payload.pet_profiles.length > 0) {
+            catsContainer.innerHTML = "";
+            payload.pet_profiles.forEach(cat => {
+                const lastVisit = cat.last_visit ? new Date(cat.last_visit).toLocaleString() : "Never";
+                
+                const card = document.createElement("div");
+                card.className = "cat-card";
+                card.innerHTML = `
+                    <img src="${cat.profile_pic}" class="cat-img" onerror="this.style.display='none'">
+                    <div class="cat-info">
+                        <h3>${cat.name}</h3>
+                        <p>Age: ${cat.age} years</p>
+                        <p>Weight: <strong>${cat.latest_weight} kg</strong></p>
+                        <p>Last Visit: ${lastVisit}</p>
+                    </div>
+                `;
+                catsContainer.appendChild(card);
+            });
+        } else {
+            catsContainer.innerHTML = "<p>No cat profiles found.</p>";
+        }
+    }
+
+    // Initial Load
+    loadDashboard();
 </script>
+
 </body>
 </html>
