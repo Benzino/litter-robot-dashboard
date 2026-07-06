@@ -53,38 +53,35 @@ async def main():
         
         # Look at all of today's events
         if act_date == today_str:
+            action_str = str(act.action)
             
-            # --- DIAGNOSTIC PRINT ---
-            # This prints the raw data to your GitHub Actions log so we can see its exact structure
-            print(f"DEBUG ACTIVITY: Action={act.action} | Vars={vars(act)}")
-            
-            pet_name = None
-            
-            # Method 1: Check for direct pet_name attribute
-            if getattr(act, 'pet_name', None):
-                pet_name = act.pet_name
-                
-            # Method 2: Check if it's stored under a 'pet' attribute
-            elif getattr(act, 'pet', None):
-                pet_val = act.pet
-                if hasattr(pet_val, 'name'):
-                    pet_name = pet_val.name
-                elif isinstance(pet_val, str):
-                    pet_name = pet_val
+            # Check if this activity is a recorded pet weight
+            if action_str.startswith("Pet Weight Recorded"):
+                try:
+                    # Extract the number from "Pet Weight Recorded: 7.21 lbs"
+                    weight_text = action_str.split(":")[1].replace("lbs", "").strip()
+                    recorded_weight = float(weight_text)
                     
-            # Method 3: Check if it's stored by pet_id, and match it to our cat profiles
-            elif getattr(act, 'pet_id', None) or getattr(act, 'petId', None):
-                pet_id = getattr(act, 'pet_id', getattr(act, 'petId', None))
-                for p in pets:
-                    if p.id == pet_id:
-                        pet_name = p.name
-                        break
-            
-            # If we successfully found a cat's name, log it!
-            if pet_name and pet_name in daily_stats["cats"]:
-                daily_stats["cats"][pet_name]["visits"] += 1
-                if act_time not in daily_stats["cats"][pet_name]["times"]:
-                    daily_stats["cats"][pet_name]["times"].append(act_time)
+                    # Figure out which cat this is by finding the closest profile weight
+                    closest_cat = None
+                    smallest_diff = 999
+                    
+                    for pet in pets:
+                        # Compare the recorded weight to the cats' baseline profiles (in lbs)
+                        diff = abs(pet.weight - recorded_weight)
+                        if diff < smallest_diff:
+                            smallest_diff = diff
+                            closest_cat = pet.name
+                    
+                    # Assign the visit if we found a match within a reasonable margin (e.g., 2 lbs)
+                    if closest_cat and smallest_diff < 2.0:
+                        if closest_cat in daily_stats["cats"]:
+                            daily_stats["cats"][closest_cat]["visits"] += 1
+                            if act_time not in daily_stats["cats"][closest_cat]["times"]:
+                                daily_stats["cats"][closest_cat]["times"].append(act_time)
+                                
+                except Exception as e:
+                    print(f"Skipping unparseable weight event: {e}")
 
     # 6. Upsert Logic: Update today or append new day
     if len(data["history"]) > 0 and data["history"][-1]["date"] == today_str:
