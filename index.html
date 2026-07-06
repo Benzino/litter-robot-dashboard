@@ -3,344 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Litter-Robot 4 Advanced Analytics</title>
-    <!-- Chart.js CDN via jsDelivr -->
+    <title>Litter-Robot 4 Command Center</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f7fb;
-            color: #2d3748;
-            margin: 0;
-            padding: 30px 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f7fafc; color: #2d3748; margin: 0; padding: 20px;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .container { max-width: 1400px; margin: 0 auto; }
+        .top-bar {
+            background: white; padding: 15px 20px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
+        select { padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: 1px solid #cbd5e0; background: white; cursor: pointer;}
+        .status-banner {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 25px;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        h1 { margin-bottom: 8px; color: #1a202c; }
-        .subtitle { color: #718096; margin-top: 0; }
+        .status-title { font-size: 20px; font-weight: 700; margin: 0; }
+        .badge { padding: 8px 16px; border-radius: 20px; font-weight: 700; text-transform: uppercase; font-size: 14px; }
+        .status-normal { background: #c6f6d5; color: #22543d; }
+        .status-alert { background: #fed7d7; color: #742a2a; }
         
-        .control-panel {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            align-items: flex-end;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
-            min-width: 280px;
-        }
-        .form-group.short {
-            flex: 0 1 200px;
-            min-width: 150px;
-        }
-        label { font-weight: 600; color: #4a5568; font-size: 14px; }
-        input[type="text"], select {
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            background-color: white;
-            height: 48px;
-            box-sizing: border-box;
-        }
-        input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: #4299e1;
-        }
-        button {
-            background-color: #4299e1;
-            color: white;
-            border: none;
-            padding: 0 24px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            height: 48px;
-            transition: background 0.2s;
-        }
-        button:hover { background-color: #3182ce; }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-        }
-        @media (min-width: 900px) {
-            .grid { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
-        }
-        
-        .card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            min-height: 380px;
-        }
-        .card h2 {
-            margin-top: 0;
-            font-size: 16px;
-            color: #2d3748;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #edf2f7;
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .chart-wrapper {
-            position: relative;
-            height: 300px;
-            width: 100%;
-        }
-        .error-message {
-            color: #e53e3e;
-            font-weight: 500;
-            width: 100%;
-            display: none;
-            padding: 12px;
-            background: #fff5f5;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
+        .main-layout { display: grid; grid-template-columns: 1fr; gap: 25px; }
+        @media (min-width: 1000px) { .main-layout { grid-template-columns: 2fr 1fr; } }
+        .charts-subgrid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+        @media (min-width: 600px) { .charts-subgrid { grid-template-columns: 1fr 1fr; } }
+
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
+        .card.full-width { grid-column: span 1; }
+        @media (min-width: 600px) { .card.full-width { grid-column: span 2; } }
+        .card h2 { font-size: 14px; text-transform: uppercase; color: #718096; margin-top: 0; letter-spacing: 0.5px; }
+        .chart-frame { position: relative; height: 280px; width: 100%; }
+
+        .log-table-wrapper { max-height: 640px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+        th { background: #f7fafc; position: sticky; top: 0; padding: 10px; color: #4a5568; }
+        td { padding: 10px; border-bottom: 1px solid #edf2f7; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>Litter-Robot 4 Advanced Analytics</h1>
-        <p class="subtitle">Multi-cat monitoring ecosystem</p>
-    </header>
-
-    <!-- Top Management Bar -->
-    <div class="control-panel">
-        <div class="form-group">
-            <label for="sheetUrl">Google Sheets Published CSV URL</label>
-            <input type="text" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv" />
-        </div>
-        <div class="form-group short">
-            <label for="dateRangeSelector">Timeframe Filter</label>
-            <select id="dateRangeSelector" onchange="updateDashboardCharts()">
-                <option value="all">All History</option>
-                <option value="1">Today Only</option>
-                <option value="7" selected>Last 7 Days</option>
-                <option value="30">Last 30 Days</option>
-            </select>
-        </div>
-        <button onclick="fetchInitialCSVData()">Sync Source Sheet</button>
-        <div id="errorMessage" class="error-message"></div>
+    <div class="top-bar">
+        <h2 style="margin:0; font-size:18px;">Dashboard Monitor</h2>
+        <select id="timeFilter" onchange="processAndRenderData()">
+            <option value="1">Today</option>
+            <option value="7" selected>Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+            <option value="all">All History</option>
+        </select>
     </div>
 
-    <!-- Live Multi-Chart Matrix -->
-    <div class="grid">
-        <!-- Metric Tracker 1: Weights -->
-        <div class="card">
-            <h2>Cat Weight Tracks</h2>
-            <div class="chart-wrapper">
-                <canvas id="weightChart"></canvas>
+    <div class="status-banner">
+        <div>
+            <p class="status-title" id="robotNameDisplay">Litter-Robot 4 Ecosystem</p>
+            <small style="color: #a0aec0;" id="lastUpdateDisplay">Loading ecosystem stats...</small>
+        </div>
+        <span class="badge status-normal" id="statusBadge">Syncing</span>
+    </div>
+
+    <div class="main-layout">
+        <div class="charts-subgrid">
+            <div class="card full-width">
+                <h2>Cat Weight Trends (kg)</h2>
+                <div class="chart-frame"><canvas id="chartWeights"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Daily Traffic Volume</h2>
+                <div class="chart-frame"><canvas id="chartDaily"></canvas></div>
+            </div>
+            <div class="card">
+                <h2>Hourly Activity Density</h2>
+                <div class="chart-frame"><canvas id="chartHourly"></canvas></div>
             </div>
         </div>
 
-        <!-- Metric Tracker 2: Volumetric Traffic Over Days -->
         <div class="card">
-            <h2>Daily Visit Volume Trends</h2>
-            <div class="chart-wrapper">
-                <canvas id="dailyVolumeChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Metric Tracker 3: Diurnal Density Pattern -->
-        <div class="card">
-            <h2>Hourly Distribution Profile</h2>
-            <div class="chart-wrapper">
-                <canvas id="hourlyDensityChart"></canvas>
+            <h2>System Activity & Status Log</h2>
+            <div class="log-table-wrapper">
+                <table>
+                    <thead><tr><th>Time</th><th>Event / Status</th></tr></thead>
+                    <tbody id="logTableBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Keep references to data arrays and active configurations globally
-let globalParsedDataset = [];
-let chartWeight = null;
-let chartDailyVolume = null;
-let chartHourlyDensity = null;
+let databaseRecords = [];
+let instanceW = null, instanceD = null, instanceH = null;
 
-// --- DYNAMIC SYSTEM PROPERTIES ---
-const WEIGHT_THRESHOLD_KG = 5.0; // Break line tracking between Cat A and Cat B here
-
-async function fetchInitialCSVData() {
-    const urlInput = document.getElementById('sheetUrl').value.trim();
-    const errorEl = document.getElementById('errorMessage');
-    errorEl.style.display = 'none';
-
-    if (!urlInput) {
-        alert('Please map your published Google CSV reference link first.');
-        return;
-    }
-
+// Read the local JSON file immediately upon bootup
+document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const response = await fetch(urlInput);
-        if (!response.ok) throw new Error('Data endpoint connection drop.');
-        const csvText = await response.text();
+        const response = await fetch('./data.json');
+        if (!response.ok) throw new Error("Data registry file not generated yet.");
+        databaseRecords = await response.json();
         
-        const lines = csvText.split('\n');
-        const buffer = [];
-
-        lines.forEach(line => {
-            const columns = line.split(',').map(col => col.replace(/"/g, '').trim());
-            if (columns.length < 3) return;
-
-            const dateObj = new Date(columns[0]);
-            const weightVal = parseFloat(columns[2]);
-
-            if (isNaN(dateObj.getTime()) || isNaN(weightVal)) return;
-            buffer.push({ date: dateObj, weight: weightVal });
-        });
-
-        if (buffer.length === 0) throw new Error('CSV verified empty or headers mismatched.');
+        // Reverse layout to read latest event at the top of the timeline
+        databaseRecords.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
         
-        // Arrange chronologically prior to caching internally
-        buffer.sort((a, b) => a.date - b.date);
-        globalParsedDataset = buffer;
-
-        // Render charts using the current filter profile
-        updateDashboardCharts();
-
-    } catch (err) {
-        errorEl.textContent = 'Error: ' + err.message + ' Verify sharing settings.';
-        errorEl.style.display = 'block';
+        if(databaseRecords.length > 0) {
+            renderStatusBanner(databaseRecords[0]);
+            processAndRenderData();
+        }
+    } catch (e) {
+        document.getElementById("lastUpdateDisplay").textContent = "Error: Run your Python automation script at least once to create data.json.";
     }
+});
+
+function renderStatusBanner(latest) {
+    const eventTime = new Date(latest.timestamp);
+    document.getElementById("robotNameDisplay").textContent = latest.robot;
+    document.getElementById("lastUpdateDisplay").textContent = "Last sync: " + eventTime.toLocaleString();
+    
+    const badge = document.getElementById("statusBadge");
+    badge.textContent = latest.event.replace(/_/g, ' ');
+    
+    const txt = latest.event.toLowerCase();
+    badge.className = (txt.includes("full") || txt.includes("error") || txt.includes("fault")) ? "badge status-alert" : "badge status-normal";
 }
 
-function updateDashboardCharts() {
-    if (globalParsedDataset.length === 0) return;
-
-    const filterMode = document.getElementById('dateRangeSelector').value;
-    let records = [...globalParsedDataset];
+function processAndRenderData() {
+    const timeframe = document.getElementById("timeFilter").value;
+    let filtered = [...databaseRecords].map(item => ({...item, dateObj: new Date(item.timestamp)}));
     
-    // Process filtering conditions cleanly based on current time thresholds
-    if (filterMode !== 'all') {
-        const targetDays = parseInt(filterMode);
-        const barrierDate = new Date();
-        barrierDate.setDate(barrierDate.getDate() - targetDays);
-        
-        if(targetDays === 1) {
-            barrierDate.setHours(0,0,0,0); // Align perfectly with midnight for "Today"
-        }
-        
-        records = globalParsedDataset.filter(row => row.date >= barrierDate);
+    if (timeframe !== 'all') {
+        const boundary = new Date();
+        boundary.setDate(boundary.getDate() - parseInt(timeframe));
+        if (timeframe === "1") boundary.setHours(0,0,0,0);
+        filtered = filtered.filter(item => item.dateObj >= boundary);
     }
 
-    // Clean out memory references if updating dynamically
-    if (chartWeight) chartWeight.destroy();
-    if (chartDailyVolume) chartDailyVolume.destroy();
-    if (chartHourlyDensity) chartHourlyDensity.destroy();
+    const chronological = [...filtered].sort((a,b) => a.dateObj - b.dateObj);
 
-    // Setup map collection buckets
-    const hourlyCounts = Array(24).fill(0);
-    const dayFrequencyMap = {};
+    if (instanceW) instanceW.destroy();
+    if (instanceD) instanceD.destroy();
+    if (instanceH) instanceH.destroy();
+
+    const logTableBody = document.getElementById("logTableBody");
+    logTableBody.innerHTML = "";
     
-    const timelinesLabels = [];
-    const seriesCatALighter = [];
-    const seriesCatBHeavier = [];
+    const hourlyDistribution = Array(24).fill(0);
+    const dayFrequency = {};
+    const chartLabels = [];
+    const catA = [], catB = [];
 
-    records.forEach(item => {
-        // 1. Map Time Records
-        const labelStamp = item.date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + 
-                           ' ' + 
-                           item.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        timelinesLabels.push(labelStamp);
-
-        // 2. Distribute Weight Class Data points
-        if (item.weight < WEIGHT_THRESHOLD_KG) {
-            seriesCatALighter.push(item.weight);
-            seriesCatBHeavier.push(null);
-        } else {
-            seriesCatBHeavier.push(item.weight);
-            seriesCatALighter.push(null);
-        }
-
-        // 3. Increment Hourly Density
-        hourlyCounts[item.date.getHours()]++;
-
-        // 4. Increment Volumetric Tracking Array Buckets
-        const dayKey = item.date.toISOString().split('T')[0];
-        dayFrequencyMap[dayKey] = (dayFrequencyMap[dayKey] || 0) + 1;
+    filtered.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${item.dateObj.toLocaleDateString()} ${item.dateObj.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+                         <td><strong>${item.event.toUpperCase().replace(/_/g, ' ')}</strong> ${item.weight ? `(${item.weight} kg)` : ''}</td>`;
+        logTableBody.appendChild(row);
     });
 
-    // Structure Volumetric Axis Formats
-    const sortedDays = Object.keys(dayFrequencyMap).sort();
-    const dailyVolumeLabels = sortedDays.map(dStr => {
-        const [y, m, d] = dStr.split('-');
-        return new Date(y, m - 1, d).toLocaleDateString([], { month: 'short', day: 'numeric' });
-    });
-    const dailyVolumeData = sortedDays.map(dStr => dayFrequencyMap[dStr]);
-
-    // -----------------------------------------------------------------
-    // GRAPH DESIGNS (CHART.JS ATTACHMENTS)
-    // -----------------------------------------------------------------
-
-    // Chart 1: Weight Tracks
-    chartWeight = new Chart(document.getElementById('weightChart').getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: timelinesLabels,
-            datasets: [
-                { label: 'Cat A (Lighter)', data: seriesCatALighter, borderColor: '#4299e1', backgroundColor: '#4299e1', spanGaps: true, tension: 0.15, pointRadius: 3 },
-                { label: 'Cat B (Heavier)', data: seriesCatBHeavier, borderColor: '#ed64a6', backgroundColor: '#ed64a6', spanGaps: true, tension: 0.15, pointRadius: 3 }
-            ]
-        },
-        options: { responsive: true, Glen: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Weight (kg)' } } } }
-    });
-
-    // Chart 2: Daily Volume Tracking Trend (The requested visit count over days graph)
-    chartDailyVolume = new Chart(document.getElementById('dailyVolumeChart').getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: dailyVolumeLabels,
-            datasets: [{
-                label: 'Total Visits Per Day',
-                data: dailyVolumeData,
-                borderColor: '#805ad5',
-                backgroundColor: 'rgba(128, 90, 213, 0.1)',
-                fill: true,
-                tension: 0.2,
-                pointRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 }, title: { display: true, text: 'Visit Volume' } }
+    chronological.forEach(item => {
+        if (item.weight) {
+            chartLabels.push(item.dateObj.toLocaleDateString() + " " + item.dateObj.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+            if (item.weight < 5.0) {
+                catA.push(item.weight); catB.push(null);
+            } else {
+                catB.push(item.weight); catA.push(null);
             }
         }
+        hourlyDistribution[item.dateObj.getHours()]++;
+        const dayKey = item.dateObj.toISOString().split('T')[0];
+        dayFrequency[dayKey] = (dayFrequency[dayKey] || 0) + 1;
     });
 
-    // Chart 3: Hourly Diurnal Density Histogram
-    const hourLabelsArr = Array.from({length: 24}, (_, i) => `${i}:00`);
-    chartHourlyDensity = new Chart(document.getElementById('hourlyDensityChart').getContext('2d'), {
+    instanceW = new Chart(document.getElementById("chartWeights").getContext("2d"), {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [
+                { label: 'Cat A (< 5kg)', data: catA, borderColor: '#4299e1', spanGaps: true, pointRadius: 3 },
+                { label: 'Cat B (> 5kg)', data: catB, borderColor: '#ed64a6', spanGaps: true, pointRadius: 3 }
+            ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    const sortedDays = Object.keys(dayFrequency).sort();
+    instanceD = new Chart(document.getElementById("chartDaily").getContext("2d"), {
+        type: 'line',
+        data: {
+            labels: sortedDays.map(d => d.substring(5)),
+            datasets: [{ label: 'Total Logs', data: sortedDays.map(d => dayFrequency[d]), borderColor: '#805ad5', fill: false }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    instanceH = new Chart(document.getElementById("chartHourly").getContext("2d"), {
         type: 'bar',
         data: {
-            labels: hourLabelsArr,
-            datasets: [{ label: 'Cumulative Traffic Frequency', data: hourlyCounts, backgroundColor: '#48bb78' }]
+            labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+            datasets: [{ label: 'Activity Index', data: hourlyDistribution, backgroundColor: '#48bb78' }]
         },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, title: { display: true, text: 'Visits' } } } }
+        options: { responsive: true, maintainAspectRatio: false }
     });
 }
 </script>
