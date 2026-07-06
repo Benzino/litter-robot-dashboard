@@ -29,7 +29,7 @@ async def main():
         data = {"robot_status": "", "cats": {}, "history": []}
 
     # 4. Update static info (Robot status and Cat profiles)
-    data["robot_status"] = robot.status
+    data["robot_status"] = robot.status.value
     
     for pet in pets:
         data["cats"][pet.name] = {
