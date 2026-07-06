@@ -9,11 +9,11 @@
   "pet_profiles": [
     {
       "name": "Shiv",
-      "latest_weight": 15.35
+      "latest_weight": "15.35"
     },
     {
       "name": "Baby",
-      "latest_weight": 7.21
+      "latest_weight": "7.21"
     }
   ],
   "logs": [
