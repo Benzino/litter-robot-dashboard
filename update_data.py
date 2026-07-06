@@ -53,13 +53,36 @@ async def main():
         
         # Look at all of today's events
         if act_date == today_str:
-            # Check if the Whisker API attached a pet's name to this activity
-            pet_name = getattr(act, 'pet_name', None)
             
-            # If a cat was identified, log the visit
+            # --- DIAGNOSTIC PRINT ---
+            # This prints the raw data to your GitHub Actions log so we can see its exact structure
+            print(f"DEBUG ACTIVITY: Action={act.action} | Vars={vars(act)}")
+            
+            pet_name = None
+            
+            # Method 1: Check for direct pet_name attribute
+            if getattr(act, 'pet_name', None):
+                pet_name = act.pet_name
+                
+            # Method 2: Check if it's stored under a 'pet' attribute
+            elif getattr(act, 'pet', None):
+                pet_val = act.pet
+                if hasattr(pet_val, 'name'):
+                    pet_name = pet_val.name
+                elif isinstance(pet_val, str):
+                    pet_name = pet_val
+                    
+            # Method 3: Check if it's stored by pet_id, and match it to our cat profiles
+            elif getattr(act, 'pet_id', None) or getattr(act, 'petId', None):
+                pet_id = getattr(act, 'pet_id', getattr(act, 'petId', None))
+                for p in pets:
+                    if p.id == pet_id:
+                        pet_name = p.name
+                        break
+            
+            # If we successfully found a cat's name, log it!
             if pet_name and pet_name in daily_stats["cats"]:
                 daily_stats["cats"][pet_name]["visits"] += 1
-                # Prevent duplicate times if it triggers twice in the same minute
                 if act_time not in daily_stats["cats"][pet_name]["times"]:
                     daily_stats["cats"][pet_name]["times"].append(act_time)
 
