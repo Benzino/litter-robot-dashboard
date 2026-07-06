@@ -1,10 +1,8 @@
 import os
 import json
 import asyncio
-from datetime import datetime
 from pylitterbot import Account
 
-# File where history will be stored inside your repository
 DATA_FILE = "data.json"
 
 async def main():
@@ -16,44 +14,69 @@ async def main():
         load_robots=True
     )
 
-    # 2. Load existing data if it exists, otherwise start fresh
+    # 2. Setup internal file layout structure
+    existing_logs = []
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             try:
-                all_logs = json.load(f)
-            except json.JSONDecodeError:
-                all_logs = []
-    else:
-        all_logs = []
+                old_data = json.load(f)
+                # Keep historical logs if migrating from previous design
+                existing_logs = old_data.get("logs", old_data if isinstance(old_data, list) else [])
+            except (json.JSONDecodeError, TypeError):
+                existing_logs = []
 
-    # Create a set of existing timestamps to prevent duplicate entries
-    existing_timestamps = {log["timestamp"] for log in all_logs}
+    existing_timestamps = {log["timestamp"] for log in existing_logs}
 
-    # 3. Pull latest history from the robot
+    # 3. Pull Current Hardware Metrics (Latest Snapshot)
+    robot_metadata = {}
     for robot in account.robots:
+        # Save structural details for the primary robot
+        robot_metadata = {
+            "name": str(robot.name),
+            "is_online": getattr(robot, "is_online", "Unknown"),
+            "litter_level": getattr(robot, "litter_level", "Unknown"),
+            "cycle_count": getattr(robot, "cycle_count", "Unknown"),
+            "status_text": str(getattr(robot, "status_text", "Normal"))
+        }
+        
+        # Pull incoming event streams
         history = await robot.get_activity_history()
         for event in history:
             ts_str = str(event.timestamp)
-            
-            # If we haven't logged this specific timestamp before, add it
             if ts_str not in existing_timestamps:
                 weight = event.pet_weight if hasattr(event, 'pet_weight') and event.pet_weight else None
-                all_logs.append({
+                existing_logs.append({
                     "timestamp": ts_str,
                     "event": str(event.action),
                     "robot": str(robot.name),
                     "weight": weight
                 })
 
-    # Sort everything chronological (oldest to newest)
-    all_logs.sort(key=lambda x: x["timestamp"])
+    # Sort timeline records cronologically
+    existing_logs.sort(key=lambda x: x["timestamp"])
 
-    # 4. Save back to the JSON file
+    # 4. Pull App Cat Profiles
+    pet_profiles = []
+    # If the user has assigned named cat profiles in the official app, track them
+    if hasattr(account, "pets") and account.pets:
+        for pet in account.pets:
+            pet_profiles.append({
+                "name": str(getattr(pet, "name", "Unknown Cat")),
+                "latest_weight": getattr(pet, "weight", "Unknown")
+            })
+
+    # 5. Package into unified dictionary layout
+    compiled_payload = {
+        "robot_metadata": robot_metadata,
+        "pet_profiles": pet_profiles,
+        "logs": existing_logs
+    }
+
     with open(DATA_FILE, "w") as f:
-        json.dump(all_logs, f, indent=2)
+        json.dump(compiled_payload, f, indent=2)
             
     await account.disconnect()
-    print(f"Sync complete. Total logs stored: {len(all_logs)}")
+    print("Database sync complete with advanced telemetry.")
 
 if __name__ == "__main__":
     asyncio.run(main())
