@@ -35,5 +35,9 @@
         }
       }
     }
-  ]
+  ],
+  "is_online": true,
+  "waste_drawer_level": 62,
+  "litter_level": 90.0,
+  "cycle_count": 2142
 }
