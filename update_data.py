@@ -44,7 +44,7 @@ async def main():
     
     daily_stats = {
         "date": today_str,
-        "cats": {pet.name: {"visits": 0, "times": [], "weight": pet.weight} for pet in pets}
+        "cats": {pet.name: {"visits": 0, "times": [], "weight": round(pet.weight * 0.453592, 2)} for pet in pets}
     }
 
     for act in activities:
