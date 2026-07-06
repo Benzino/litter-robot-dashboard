@@ -14,13 +14,19 @@ async def main():
         load_robots=True
     )
 
-    # 2. Explicitly fetch the app's cat profiles
+    # 2. Force pet profile population
+    # Some versions of pylitterbot require an explicit call to load/get pets
     try:
-        await account.get_pets()
+        # Check if the account object has a method to load pets
+        if hasattr(account, 'load_pets'):
+            await account.load_pets()
+        elif hasattr(account, 'get_pets'):
+            await account.get_pets()
+        # In some versions, simply accessing account.pets after connect/load_robots is enough
     except Exception as e:
         print(f"Warning: Could not fetch pet profiles: {e}")
 
-    # 3. Setup internal file layout structure safely migrating old lists
+    # 3. Setup internal file layout structure
     existing_logs = []
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
@@ -35,10 +41,9 @@ async def main():
 
     existing_timestamps = {log["timestamp"] for log in existing_logs}
 
-    # 4. Pull Current Hardware Metrics (Latest Snapshot)
+    # 4. Pull Current Hardware Metrics
     robot_metadata = {}
     for robot in account.robots:
-        # Save structural details for the primary robot
         robot_metadata = {
             "name": str(robot.name),
             "is_online": getattr(robot, "is_online", "Unknown"),
@@ -47,7 +52,6 @@ async def main():
             "status_text": str(getattr(robot, "status_text", "Normal"))
         }
         
-        # Pull incoming event streams
         history = await robot.get_activity_history()
         for event in history:
             ts_str = str(event.timestamp)
@@ -60,19 +64,20 @@ async def main():
                     "weight": weight
                 })
 
-    # Sort timeline records chronologically
     existing_logs.sort(key=lambda x: x["timestamp"])
 
-    # 5. Compile App Cat Profiles
+    # 5. Extract Pet Profiles
     pet_profiles = []
-    if hasattr(account, "pets") and account.pets:
-        for pet in account.pets:
-            pet_profiles.append({
-                "name": str(getattr(pet, "name", "Unknown Cat")),
-                "latest_weight": getattr(pet, "weight", "Unknown")
-            })
+    # If account.pets is still empty, this debug print will show up in your GitHub Actions logs
+    print(f"Debug: Found {len(account.pets)} pets in account.")
+    
+    for pet in account.pets:
+        pet_profiles.append({
+            "name": str(getattr(pet, "name", "Unknown Cat")),
+            "latest_weight": getattr(pet, "weight", "Unknown")
+        })
 
-    # 6. Package everything into unified dictionary layout
+    # 6. Package and Save
     compiled_payload = {
         "robot_metadata": robot_metadata,
         "pet_profiles": pet_profiles,
@@ -83,7 +88,8 @@ async def main():
         json.dump(compiled_payload, f, indent=2)
             
     await account.disconnect()
-    print("Database sync complete with advanced telemetry and cat profiles.")
+    print("Database sync complete.")
 
 if __name__ == "__main__":
     asyncio.run(main())
+    
