@@ -15,16 +15,21 @@ async def main():
     )
 
     # 2. Force pet profile population
-    # Some versions of pylitterbot require an explicit call to load/get pets
     try:
-        # Check if the account object has a method to load pets
-        if hasattr(account, 'load_pets'):
+        if hasattr(account, 'load_pets'): 
             await account.load_pets()
-        elif hasattr(account, 'get_pets'):
+        elif hasattr(account, 'get_pets'): 
             await account.get_pets()
-        # In some versions, simply accessing account.pets after connect/load_robots is enough
     except Exception as e:
         print(f"Warning: Could not fetch pet profiles: {e}")
+
+    # DEBUG SECTION: This will tell us the exact field names
+    if account.pets:
+        print(f"DEBUG: Found {len(account.pets)} pets.")
+        print(f"DEBUG: First pet attributes (dir): {dir(account.pets[0])}")
+        print(f"DEBUG: First pet data (vars): {vars(account.pets[0])}")
+    else:
+        print("DEBUG: No pets found in account.pets")
 
     # 3. Setup internal file layout structure
     existing_logs = []
@@ -68,13 +73,13 @@ async def main():
 
     # 5. Extract Pet Profiles
     pet_profiles = []
-    # If account.pets is still empty, this debug print will show up in your GitHub Actions logs
-    print(f"Debug: Found {len(account.pets)} pets in account.")
-    
     for pet in account.pets:
+        # Using getattr with fallbacks to avoid crashes
+        name = getattr(pet, "name", "Unknown")
+        weight = getattr(pet, "weight", "Unknown")
         pet_profiles.append({
-            "name": str(getattr(pet, "name", "Unknown Cat")),
-            "latest_weight": getattr(pet, "weight", "Unknown")
+            "name": str(name),
+            "latest_weight": str(weight)
         })
 
     # 6. Package and Save
