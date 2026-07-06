@@ -11,21 +11,26 @@
             background-color: #f7fafc; color: #2d3748; margin: 0; padding: 20px;
         }
         .container { max-width: 1400px; margin: 0 auto; }
+        
         .top-bar {
             background: white; padding: 15px 20px; border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 20px;
             display: flex; justify-content: space-between; align-items: center;
         }
         select { padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: 1px solid #cbd5e0; background: white; cursor: pointer;}
-        .status-banner {
-            background: white; padding: 20px; border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 25px;
-            display: flex; align-items: center; justify-content: space-between;
+        
+        /* Stats Widget Deck Layout */
+        .telemetry-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; margin-bottom: 25px;
         }
-        .status-title { font-size: 20px; font-weight: 700; margin: 0; }
-        .badge { padding: 8px 16px; border-radius: 20px; font-weight: 700; text-transform: uppercase; font-size: 14px; }
-        .status-normal { background: #c6f6d5; color: #22543d; }
-        .status-alert { background: #fed7d7; color: #742a2a; }
+        .metric-card {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-align: center;
+        }
+        .metric-card p { margin: 0; color: #718096; font-size: 12px; text-transform: uppercase; font-weight: 600; }
+        .metric-card h3 { margin: 10px 0 0 0; font-size: 24px; color: #1a202c; font-weight: 700; }
         
         .main-layout { display: grid; grid-template-columns: 1fr; gap: 25px; }
         @media (min-width: 1000px) { .main-layout { grid-template-columns: 2fr 1fr; } }
@@ -35,37 +40,53 @@
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
         .card.full-width { grid-column: span 1; }
         @media (min-width: 600px) { .card.full-width { grid-column: span 2; } }
-        .card h2 { font-size: 14px; text-transform: uppercase; color: #718096; margin-top: 0; letter-spacing: 0.5px; }
+        .card h2 { font-size: 13px; text-transform: uppercase; color: #718096; margin-top: 0; letter-spacing: 0.5px; }
         .chart-frame { position: relative; height: 280px; width: 100%; }
 
-        .log-table-wrapper { max-height: 640px; overflow-y: auto; }
+        .log-table-wrapper { max-height: 500px; overflow-y: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
         th { background: #f7fafc; position: sticky; top: 0; padding: 10px; color: #4a5568; }
         td { padding: 10px; border-bottom: 1px solid #edf2f7; }
+        
+        .cat-badge-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; justify-content: center; }
+        .cat-profile-tag { background: #edf2f7; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-bar">
-        <h2 style="margin:0; font-size:18px;">Dashboard Monitor</h2>
+        <h2 style="margin:0; font-size:18px;" id="robotNameDisplay">Litter-Robot Command Center</h2>
         <select id="timeFilter" onchange="processAndRenderData()">
-            <option value="1">Today</option>
-            <option value="7" selected>Last 7 Days</option>
+            <option value="1" selected>Today Only</option>
+            <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
             <option value="all">All History</option>
         </select>
     </div>
 
-    <div class="status-banner">
-        <div>
-            <p class="status-title" id="robotNameDisplay">Litter-Robot 4 Ecosystem</p>
-            <small style="color: #a0aec0;" id="lastUpdateDisplay">Loading ecosystem stats...</small>
+    <!-- Telemetry Row Counter Cards -->
+    <div class="telemetry-row">
+        <div class="metric-card">
+            <p>WiFi Connection</p>
+            <h3 id="statWifi" style="color: #48bb78;">Syncing...</h3>
         </div>
-        <span class="badge status-normal" id="statusBadge">Syncing</span>
+        <div class="metric-card">
+            <p>Current Litter Level</p>
+            <h3 id="statLitter">--</h3>
+        </div>
+        <div class="metric-card">
+            <p>Total Life Cycles</p>
+            <h3 id="statCycles">--</h3>
+        </div>
+        <div class="metric-card" style="min-width: 260px;">
+            <p>Registered Cat Profiles</p>
+            <div class="cat-badge-list" id="statCats">No active profiles</div>
+        </div>
     </div>
 
     <div class="main-layout">
+        <!-- Graphs Block -->
         <div class="charts-subgrid">
             <div class="card full-width">
                 <h2>Cat Weight Trends (kg)</h2>
@@ -81,6 +102,7 @@
             </div>
         </div>
 
+        <!-- History Block -->
         <div class="card">
             <h2>System Activity & Status Log</h2>
             <div class="log-table-wrapper">
@@ -94,48 +116,70 @@
 </div>
 
 <script>
-let databaseRecords = [];
+let databaseRoot = { robot_metadata: {}, pet_profiles: [], logs: [] };
 let instanceW = null, instanceD = null, instanceH = null;
 
-// Read the local JSON file immediately upon bootup
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const response = await fetch('./data.json');
-        if (!response.ok) throw new Error("Data registry file not generated yet.");
-        databaseRecords = await response.json();
+        if (!response.ok) throw new Error("Data map connection lost.");
+        databaseRoot = await response.json();
         
-        // Reverse layout to read latest event at the top of the timeline
-        databaseRecords.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+        // Ensure log array boundaries exist safely
+        if(!databaseRoot.logs) databaseRoot.logs = [];
         
-        if(databaseRecords.length > 0) {
-            renderStatusBanner(databaseRecords[0]);
-            processAndRenderData();
-        }
+        // Sort timeline descending for chronological extraction processing loops
+        databaseRoot.logs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        renderTelemetryWidgets(databaseRoot);
+        processAndRenderData();
     } catch (e) {
-        document.getElementById("lastUpdateDisplay").textContent = "Error: Run your Python automation script at least once to create data.json.";
+        document.getElementById("statWifi").textContent = "Offline";
+        document.getElementById("statWifi").style.color = "#e53e3e";
     }
 });
 
-function renderStatusBanner(latest) {
-    const eventTime = new Date(latest.timestamp);
-    document.getElementById("robotNameDisplay").textContent = latest.robot;
-    document.getElementById("lastUpdateDisplay").textContent = "Last sync: " + eventTime.toLocaleString();
+function renderTelemetryWidgets(payload) {
+    const meta = payload.robot_metadata || {};
+    if(meta.name) document.getElementById("robotNameDisplay").textContent = meta.name;
     
-    const badge = document.getElementById("statusBadge");
-    badge.textContent = latest.event.replace(/_/g, ' ');
-    
-    const txt = latest.event.toLowerCase();
-    badge.className = (txt.includes("full") || txt.includes("error") || txt.includes("fault")) ? "badge status-alert" : "badge status-normal";
+    // 1. Process Online State Indicators
+    const wifiEl = document.getElementById("statWifi");
+    const onlineState = meta.is_online;
+    if(onlineState === true || onlineState === "True") {
+        wifiEl.textContent = "Connected"; wifiEl.style.color = "#48bb78";
+    } else {
+        wifiEl.textContent = "Disconnected"; wifiEl.style.color = "#e53e3e";
+    }
+
+    // 2. Process Litter Levels & Cycle Totals
+    document.getElementById("statLitter").textContent = meta.litter_level !== undefined ? meta.litter_level : "Unknown";
+    document.getElementById("statCycles").textContent = meta.cycle_count !== undefined ? meta.cycle_count : "Unknown";
+
+    // 3. Render Profile Badges
+    const catsContainer = document.getElementById("statCats");
+    if(payload.pet_profiles && payload.pet_profiles.length > 0) {
+        catsContainer.innerHTML = "";
+        payload.pet_profiles.forEach(cat => {
+            const span = document.createElement("span");
+            span.className = "cat-profile-tag";
+            span.textContent = `${cat.name} (${cat.latest_weight} kg)`;
+            catsContainer.appendChild(span);
+        });
+    }
 }
 
 function processAndRenderData() {
+    const logsList = databaseRoot.logs || [];
+    if (logsList.length === 0) return;
+    
     const timeframe = document.getElementById("timeFilter").value;
-    let filtered = [...databaseRecords].map(item => ({...item, dateObj: new Date(item.timestamp)}));
+    let filtered = [...logsList].map(item => ({...item, dateObj: new Date(item.timestamp)}));
     
     if (timeframe !== 'all') {
         const boundary = new Date();
         boundary.setDate(boundary.getDate() - parseInt(timeframe));
-        if (timeframe === "1") boundary.setHours(0,0,0,0);
+        if (timeframe === "1") boundary.setHours(0,0,0,0); // Reset hour boundary index mapping for Today filter execution
         filtered = filtered.filter(item => item.dateObj >= boundary);
     }
 
