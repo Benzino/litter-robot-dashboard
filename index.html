@@ -1,141 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Litter Robot Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: sans-serif; margin: 20px; background: #f4f4f9; }
-        .card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1, h2 { color: #333; }
-        select { padding: 5px; font-size: 16px; margin-bottom: 10px; }
-    </style>
-</head>
-<body>
-
-    <h1>Litter Robot Dashboard</h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Litter-Robot 4 Dashboard</title>
     
-    <div class="card">
-        <h2>System Status</h2>
-        <p><strong>Robot Status:</strong> <span id="robot-status">Loading...</span></p>
-    </div>
-
-    <div class="card" id="cat-profiles">
-        <h2>Cat Profiles</h2>
-        </div>
-
-    <div class="card">
-        <h2>Usage & Weight Trends</h2>
-        <label for="timeframe">Select Timeframe: </label>
-        <select id="timeframe" onchange="updateDashboard()">
-            <option value="1">Today</option>
-            <option value="7" selected>1 Week</option>
-            <option value="14">2 Weeks</option>
-            <option value="30">1 Month</option>
-            <option value="90">3 Months</option>
-            <option value="all">All Time</option>
-        </select>
-        
-        <canvas id="weightChart"></canvas>
-    </div>
-
-    <script>
-        let fullData = null;
-        let weightChart = null;
-
-        async function loadData() {
-            const res = await fetch('history.json');
-            fullData = await res.json();
-            
-            document.getElementById('robot-status').innerText = fullData.robot_status;
-            renderCatProfiles();
-            initChart();
-            updateDashboard();
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
         }
 
-        function renderCatProfiles() {
-            const container = document.getElementById('cat-profiles');
-            container.innerHTML = '<h2>Cat Profiles</h2>'; // reset
-            
-            for (const [name, info] of Object.entries(fullData.cats)) {
-                container.innerHTML += `
-                    <p><strong>${name}</strong>: ${info.weight} lbs | Age: ${info.age} | Birthday: ${info.birthday}</p>
-                    <p id="stats-${name}"></p>
-                    <hr>
-                `;
-            }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: var(--bg-color); 
+            color: var(--text-main);
         }
 
-        function updateDashboard() {
-            const timeframe = document.getElementById('timeframe').value;
-            let filteredHistory = fullData.history;
-
-            if (timeframe !== 'all') {
-                const days = parseInt(timeframe);
-                const cutoff = new Date();
-                cutoff.setDate(cutoff.getDate() - days);
-                
-                filteredHistory = fullData.history.filter(entry => {
-                    return new Date(entry.date) >= cutoff;
-                });
-            }
-
-            // Update Chart
-            const labels = filteredHistory.map(h => h.date);
-            const datasets = [];
-            const catNames = Object.keys(fullData.cats);
-            const colors = ['#3b82f6', '#f97316', '#10b981']; 
-
-            catNames.forEach((name, index) => {
-                datasets.push({
-                    label: `${name} Weight`,
-                    data: filteredHistory.map(h => h.cats[name]?.weight || null),
-                    borderColor: colors[index % colors.length],
-                    tension: 0.2
-                });
-            });
-
-            weightChart.data.labels = labels;
-            weightChart.data.datasets = datasets;
-            weightChart.update();
-
-            // Calculate and Update Averages/Totals
-            catNames.forEach(name => {
-                let totalVisits = 0;
-                let todayVisits = 0;
-                let todayTimes = [];
-
-                filteredHistory.forEach(h => {
-                    if (h.cats[name]) {
-                        totalVisits += h.cats[name].visits;
-                        // Grab today's specific info (last item in history)
-                        if (h.date === fullData.history[fullData.history.length-1].date) {
-                            todayVisits = h.cats[name].visits;
-                            todayTimes = h.cats[name].times;
-                        }
-                    }
-                });
-
-                const average = (totalVisits / (filteredHistory.length || 1)).toFixed(1);
-                const statsElement = document.getElementById(`stats-${name}`);
-                if (statsElement) {
-                    statsElement.innerHTML = `
-                        Visits Today: <strong>${todayVisits}</strong> (${todayTimes.join(', ') || 'None yet'}) <br>
-                        Average Visits/Day (in selected timeframe): <strong>${average}</strong>
-                    `;
-                }
-            });
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        function initChart() {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            weightChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: [], datasets: [] },
-                options: { responsive: true, scales: { y: { min: 5 } } }
-            });
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
-        loadData();
-    </script>
-</body>
-</html>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card h2 { 
+            margin-top: 0; 
+            font-size: 1.2rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .robot-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .robot-image {
+            width: 100px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1e40af;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .cat-stat {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .cat-stat p { margin: 5px 0; font-size: 0.95rem; }
+        .cat-stat strong { color: var(--text-main); }
+
+        .chart-container {
+            grid-column: 1 / -1; /* Spans full width */
+            position: relative;
+        }
