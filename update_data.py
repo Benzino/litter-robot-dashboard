@@ -26,7 +26,15 @@ async def main():
         with open(HISTORY_FILE, 'r') as f:
             data = json.load(f)
     else:
-        data = {"robot_status": "", "cats": {}, "history": []}
+        data = {
+            "robot_status": "", 
+            "is_online": False, 
+            "waste_drawer_level": 0, 
+            "litter_level": 0, 
+            "cycle_count": 0, 
+            "cats": {}, 
+            "history": []
+        }
 
     # 4. Update static info (Robot status and Cat profiles)
     data["robot_status"] = robot.status.value
@@ -37,13 +45,12 @@ async def main():
     
     for pet in pets:
         data["cats"][pet.name] = {
-            "weight": round(pet.weight * 0.453592, 2),
+            "weight": round(pet.weight * 0.453592, 2), # Convert lbs to kg
             "birthday": str(pet.birthday) if pet.birthday else "Unknown",
             "age": pet.age if pet.age else "Unknown"
         }
 
-    # 5. Get today's activity history (Mock logic for extracting pet visits)
-    # Note: pylitterbot's activity history structure varies, you may need to tweak property names.
+    # 5. Get today's activity history
     activities = await robot.get_activity_history(limit=50)
     
     daily_stats = {
