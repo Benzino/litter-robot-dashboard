@@ -140,9 +140,15 @@
             <h2><i class="fa-solid fa-robot icon-primary"></i> System Status</h2>
             <div class="robot-container">
                 <img src="https://www.litter-robot.com/media/catalog/product/c/o/core-litter-robot-4-white-hero-with-step-1200x1200px-web_4.png" alt="Litter Robot" class="robot-image">
-                <div>
+                <div style="width: 100%;">
                     <p style="margin: 0 0 10px 0; color: var(--text-muted);">Current State:</p>
-                    <span class="status-badge" id="robot-status"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
+                    <div style="margin-bottom: 15px;">
+                        <span class="status-badge" id="robot-status"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
+                    </div>
+                    <p><i class="fa-solid fa-wifi"></i> <strong>Network:</strong> <span id="robot-online"></span></p>
+                    <p><i class="fa-solid fa-trash"></i> <strong>Waste Drawer:</strong> <span id="robot-waste"></span>%</p>
+                    <p><i class="fa-solid fa-box"></i> <strong>Litter Level:</strong> <span id="robot-litter"></span>%</p>
+                    <p><i class="fa-solid fa-rotate-right"></i> <strong>Total Cycles:</strong> <span id="robot-cycles"></span></p>
                 </div>
             </div>
         </div>
@@ -174,11 +180,20 @@
         let weightChart = null;
 
         async function loadData() {
+            async function loadData() {
             try {
                 const res = await fetch('history.json');
                 fullData = await res.json();
                 
                 document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${fullData.robot_status}`;
+                
+                // New Hardware Metrics
+                const isOnline = fullData.is_online ? '<span style="color: #10b981;">Online</span>' : '<span style="color: #ef4444;">Offline</span>';
+                document.getElementById('robot-online').innerHTML = isOnline;
+                document.getElementById('robot-waste').innerText = fullData.waste_drawer_level;
+                document.getElementById('robot-litter').innerText = fullData.litter_level;
+                document.getElementById('robot-cycles').innerText = fullData.cycle_count;
+
                 renderCatProfiles();
                 initChart();
                 updateDashboard();
