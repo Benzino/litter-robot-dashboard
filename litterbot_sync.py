@@ -9,14 +9,11 @@ DATA_FILE = "data.json"
 def calculate_age(birthdate_str):
     if not birthdate_str: return "Unknown"
     try:
-        # Expected format from log: '2023-04-02 00:00:00.000'
-        # We take just the date part before the space
         birthdate = datetime.strptime(birthdate_str.split(' ')[0], '%Y-%m-%d')
         today = datetime.now()
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
         return age
-    except:
-        return "Unknown"
+    except: return "Unknown"
 
 async def main():
     account = Account()
@@ -25,7 +22,6 @@ async def main():
         password=os.environ["WHISKER_PASSWORD"], 
         load_robots=True
     )
-
     try:
         if hasattr(account, 'load_pets'): await account.load_pets()
         elif hasattr(account, 'get_pets'): await account.get_pets()
@@ -42,12 +38,17 @@ async def main():
 
     robot_metadata = {}
     for robot in account.robots:
+        # Capture Waste Drawer Level (percentage)
+        waste_level = getattr(robot, "waste_drawer_level", None)
+        
         robot_metadata = {
             "name": str(robot.name),
             "is_online": getattr(robot, "is_online", "Unknown"),
             "litter_level": getattr(robot, "litter_level", "Unknown"),
-            "cycle_count": getattr(robot, "cycle_count", "Unknown")
+            "cycle_count": getattr(robot, "cycle_count", "Unknown"),
+            "waste_level": waste_level if waste_level is not None else "Unknown"
         }
+        
         history = await robot.get_activity_history()
         for event in history:
             ts_str = str(event.timestamp)
@@ -64,15 +65,20 @@ async def main():
     pet_profiles = []
     for pet in account.pets:
         data = getattr(pet, "_data", {})
+        # Convert weight to Kg (assuming API provides lbs)
+        raw_weight = data.get("lastWeightReading") or data.get("weight")
+        weight_kg = round(raw_weight / 2.20462, 2) if isinstance(raw_weight, (int, float)) else "Unknown"
+        
+        # Pull Weight History for Graph
         history = data.get("weightHistory", [])
-        last_visit = history[-1].get("timestamp") if history else None
         
         pet_profiles.append({
             "name": str(data.get("name", "Unknown")),
             "age": calculate_age(data.get("birthday")),
-            "latest_weight": str(data.get("lastWeightReading") or data.get("weight", "Unknown")),
+            "latest_weight": weight_kg,
             "profile_pic": str(data.get("s3ImageURL", "")),
-            "last_visit": last_visit
+            "last_visit": history[-1].get("timestamp") if history else None,
+            "weight_history": history # Keeping this for the graph
         })
 
     compiled_payload = {
@@ -85,7 +91,7 @@ async def main():
         json.dump(compiled_payload, f, indent=2)
             
     await account.disconnect()
-    print("Database sync complete with calculated age.")
+    print("Database sync complete.")
 
 if __name__ == "__main__":
     asyncio.run(main())
