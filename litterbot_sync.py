@@ -23,14 +23,6 @@ async def main():
     except Exception as e:
         print(f"Warning: Could not fetch pet profiles: {e}")
 
-    # DEBUG SECTION: This will tell us the exact field names
-    if account.pets:
-        print(f"DEBUG: Found {len(account.pets)} pets.")
-        print(f"DEBUG: First pet attributes (dir): {dir(account.pets[0])}")
-        print(f"DEBUG: First pet data (vars): {vars(account.pets[0])}")
-    else:
-        print("DEBUG: No pets found in account.pets")
-
     # 3. Setup internal file layout structure
     existing_logs = []
     if os.path.exists(DATA_FILE):
@@ -71,16 +63,22 @@ async def main():
 
     existing_logs.sort(key=lambda x: x["timestamp"])
 
-    # 5. Extract Pet Profiles
+    # 5. Extract Pet Profiles (Targeting the _data dictionary)
     pet_profiles = []
+    print(f"DEBUG: Processing {len(account.pets)} pets.")
+    
     for pet in account.pets:
-        # Using getattr with fallbacks to avoid crashes
-        name = getattr(pet, "name", "Unknown")
-        weight = getattr(pet, "weight", "Unknown")
+        # Accessing the raw _data dictionary directly for reliability
+        data = getattr(pet, "_data", {})
+        name = data.get("name", "Unknown")
+        # Using lastWeightReading as the primary weight source
+        weight = data.get("lastWeightReading") or data.get("weight", "Unknown")
+        
         pet_profiles.append({
             "name": str(name),
             "latest_weight": str(weight)
         })
+        print(f"DEBUG: Successfully added {name} with weight {weight}")
 
     # 6. Package and Save
     compiled_payload = {
