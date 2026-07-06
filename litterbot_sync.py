@@ -14,7 +14,13 @@ async def main():
         load_robots=True
     )
 
-    # 2. Setup internal file layout structure safely migrating old lists
+    # 2. Explicitly fetch the app's cat profiles
+    try:
+        await account.get_pets()
+    except Exception as e:
+        print(f"Warning: Could not fetch pet profiles: {e}")
+
+    # 3. Setup internal file layout structure safely migrating old lists
     existing_logs = []
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
@@ -29,7 +35,7 @@ async def main():
 
     existing_timestamps = {log["timestamp"] for log in existing_logs}
 
-    # 3. Pull Current Hardware Metrics (Latest Snapshot)
+    # 4. Pull Current Hardware Metrics (Latest Snapshot)
     robot_metadata = {}
     for robot in account.robots:
         # Save structural details for the primary robot
@@ -57,7 +63,7 @@ async def main():
     # Sort timeline records chronologically
     existing_logs.sort(key=lambda x: x["timestamp"])
 
-    # 4. Pull App Cat Profiles
+    # 5. Compile App Cat Profiles
     pet_profiles = []
     if hasattr(account, "pets") and account.pets:
         for pet in account.pets:
@@ -66,7 +72,7 @@ async def main():
                 "latest_weight": getattr(pet, "weight", "Unknown")
             })
 
-    # 5. Package into unified dictionary layout
+    # 6. Package everything into unified dictionary layout
     compiled_payload = {
         "robot_metadata": robot_metadata,
         "pet_profiles": pet_profiles,
@@ -77,7 +83,7 @@ async def main():
         json.dump(compiled_payload, f, indent=2)
             
     await account.disconnect()
-    print("Database sync complete with advanced telemetry.")
+    print("Database sync complete with advanced telemetry and cat profiles.")
 
 if __name__ == "__main__":
     asyncio.run(main())
