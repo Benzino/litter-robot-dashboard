@@ -6,7 +6,16 @@
     "cycle_count": 2142,
     "status_text": "Ready"
   },
-  "pet_profiles": [],
+  "pet_profiles": [
+    {
+      "name": "Shiv",
+      "latest_weight": 15.35
+    },
+    {
+      "name": "Baby",
+      "latest_weight": 7.21
+    }
+  ],
   "logs": [
     {
       "timestamp": "2026-07-03 23:49:29+00:00",
