@@ -17,13 +17,20 @@
       "date": "2026-07-06",
       "cats": {
         "Shiv": {
-          "visits": 0,
-          "times": [],
+          "visits": 2,
+          "times": [
+            "13:08",
+            "08:41"
+          ],
           "weight": 6.96
         },
         "Baby": {
-          "visits": 0,
-          "times": [],
+          "visits": 3,
+          "times": [
+            "16:20",
+            "09:52",
+            "03:50"
+          ],
           "weight": 3.27
         }
       }
