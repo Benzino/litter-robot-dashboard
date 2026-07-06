@@ -108,7 +108,7 @@
         .cat-stat strong { color: var(--text-main); }
 
         .chart-container {
-            grid-column: 1 / -1; /* Spans full width */
+            grid-column: 1 / -1; 
             position: relative;
         }
 
@@ -180,14 +180,13 @@
         let weightChart = null;
 
         async function loadData() {
-            async function loadData() {
             try {
                 const res = await fetch('history.json');
                 fullData = await res.json();
                 
                 document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${fullData.robot_status}`;
                 
-                // New Hardware Metrics
+                // Hardware Metrics
                 const isOnline = fullData.is_online ? '<span style="color: #10b981;">Online</span>' : '<span style="color: #ef4444;">Offline</span>';
                 document.getElementById('robot-online').innerHTML = isOnline;
                 document.getElementById('robot-waste').innerText = fullData.waste_drawer_level;
@@ -198,7 +197,8 @@
                 initChart();
                 updateDashboard();
             } catch (error) {
-                document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:red;"></i> Offline`;
+                console.error("Error loading data:", error);
+                document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:red;"></i> Error Loading Data`;
             }
         }
 
@@ -241,7 +241,6 @@
             const datasets = [];
             const catNames = Object.keys(fullData.cats);
             
-            // Fancy Chart Colors (Blue and Pink gradients)
             const bgColors = ['rgba(99, 102, 241, 0.2)', 'rgba(236, 72, 153, 0.2)'];
             const borderColors = ['#6366f1', '#ec4899'];
 
@@ -257,8 +256,8 @@
                     pointBorderWidth: 2,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    fill: true, // Creates the shaded area below the line
-                    tension: 0.4 // Makes the line curved instead of jagged
+                    fill: true, 
+                    tension: 0.4 
                 });
             });
 
@@ -301,10 +300,7 @@
                 data: { labels: [], datasets: [] },
                 options: { 
                     responsive: true, 
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
+                    interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: {
                             position: 'top',
@@ -321,13 +317,8 @@
                         }
                     },
                     scales: { 
-                        y: { 
-                            min: 3, 
-                            grid: { borderDash: [5, 5], color: '#e2e8f0' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
+                        y: { min: 2, grid: { borderDash: [5, 5], color: '#e2e8f0' } },
+                        x: { grid: { display: false } }
                     } 
                 }
             });
