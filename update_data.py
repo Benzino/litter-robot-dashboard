@@ -33,7 +33,7 @@ async def main():
     
     for pet in pets:
         data["cats"][pet.name] = {
-            "weight": pet.weight,
+            "weight": round(pet.weight * 0.453592, 2),
             "birthday": str(pet.birthday) if pet.birthday else "Unknown",
             "age": pet.age if pet.age else "Unknown"
         }
