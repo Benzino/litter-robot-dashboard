@@ -51,12 +51,17 @@ async def main():
         act_date = act.timestamp.strftime("%Y-%m-%d")
         act_time = act.timestamp.strftime("%H:%M")
         
-        # Only process today's events that are pet visits
-        if act_date == today_str and act.action == "pet_visit":
-            pet_name = act.pet_name if hasattr(act, 'pet_name') else "Unknown"
-            if pet_name in daily_stats["cats"]:
+        # Look at all of today's events
+        if act_date == today_str:
+            # Check if the Whisker API attached a pet's name to this activity
+            pet_name = getattr(act, 'pet_name', None)
+            
+            # If a cat was identified, log the visit
+            if pet_name and pet_name in daily_stats["cats"]:
                 daily_stats["cats"][pet_name]["visits"] += 1
-                daily_stats["cats"][pet_name]["times"].append(act_time)
+                # Prevent duplicate times if it triggers twice in the same minute
+                if act_time not in daily_stats["cats"][pet_name]["times"]:
+                    daily_stats["cats"][pet_name]["times"].append(act_time)
 
     # 6. Upsert Logic: Update today or append new day
     if len(data["history"]) > 0 and data["history"][-1]["date"] == today_str:
