@@ -14,14 +14,16 @@ async def main():
         load_robots=True
     )
 
-    # 2. Setup internal file layout structure
+    # 2. Setup internal file layout structure safely migrating old lists
     existing_logs = []
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             try:
                 old_data = json.load(f)
-                # Keep historical logs if migrating from previous design
-                existing_logs = old_data.get("logs", old_data if isinstance(old_data, list) else [])
+                if isinstance(old_data, dict):
+                    existing_logs = old_data.get("logs", [])
+                elif isinstance(old_data, list):
+                    existing_logs = old_data
             except (json.JSONDecodeError, TypeError):
                 existing_logs = []
 
@@ -52,12 +54,11 @@ async def main():
                     "weight": weight
                 })
 
-    # Sort timeline records cronologically
+    # Sort timeline records chronologically
     existing_logs.sort(key=lambda x: x["timestamp"])
 
     # 4. Pull App Cat Profiles
     pet_profiles = []
-    # If the user has assigned named cat profiles in the official app, track them
     if hasattr(account, "pets") and account.pets:
         for pet in account.pets:
             pet_profiles.append({
@@ -80,3 +81,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+    
