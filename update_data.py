@@ -30,6 +30,10 @@ async def main():
 
     # 4. Update static info (Robot status and Cat profiles)
     data["robot_status"] = robot.status.value
+    data["is_online"] = robot.is_online
+    data["waste_drawer_level"] = getattr(robot, 'waste_drawer_level', 'Unknown')
+    data["litter_level"] = getattr(robot, 'litter_level', 'Unknown')
+    data["cycle_count"] = getattr(robot, 'cycle_count', 'Unknown')
     
     for pet in pets:
         data["cats"][pet.name] = {
