@@ -111,3 +111,214 @@
             grid-column: 1 / -1; /* Spans full width */
             position: relative;
         }
+
+        select { 
+            padding: 8px 16px; 
+            font-size: 1rem; 
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 20px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .icon-primary { color: var(--primary); }
+        .icon-secondary { color: var(--secondary); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><i class="fa-solid fa-paw"></i> Whisker Activity Hub</h1>
+        <p style="color: var(--text-muted);">Real-time tracking for your feline friends</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        
+        <div class="card">
+            <h2><i class="fa-solid fa-robot icon-primary"></i> System Status</h2>
+            <div class="robot-container">
+                <img src="https://www.litter-robot.com/media/catalog/product/c/o/core-litter-robot-4-white-hero-with-step-1200x1200px-web_4.png" alt="Litter Robot" class="robot-image">
+                <div>
+                    <p style="margin: 0 0 10px 0; color: var(--text-muted);">Current State:</p>
+                    <span class="status-badge" id="robot-status"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="cat-profiles">
+            <h2><i class="fa-solid fa-cat icon-secondary"></i> Cat Profiles & Daily Activity</h2>
+            </div>
+
+        <div class="card chart-container">
+            <h2><i class="fa-solid fa-chart-line icon-primary"></i> Weight Trends & Usage</h2>
+            
+            <label for="timeframe"><i class="fa-solid fa-calendar-day"></i> Timeframe: </label>
+            <select id="timeframe" onchange="updateDashboard()">
+                <option value="1">Today</option>
+                <option value="7" selected>Last 7 Days</option>
+                <option value="14">Last 14 Days</option>
+                <option value="30">Last 1 Month</option>
+                <option value="90">Last 3 Months</option>
+                <option value="all">All Time</option>
+            </select>
+            
+            <canvas id="weightChart" height="100"></canvas>
+        </div>
+
+    </div>
+
+    <script>
+        let fullData = null;
+        let weightChart = null;
+
+        async function loadData() {
+            try {
+                const res = await fetch('history.json');
+                fullData = await res.json();
+                
+                document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-check-circle"></i> ${fullData.robot_status}`;
+                renderCatProfiles();
+                initChart();
+                updateDashboard();
+            } catch (error) {
+                document.getElementById('robot-status').innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:red;"></i> Offline`;
+            }
+        }
+
+        function renderCatProfiles() {
+            const container = document.getElementById('cat-profiles');
+            container.innerHTML = '<h2><i class="fa-solid fa-cat icon-secondary"></i> Cat Profiles & Daily Activity</h2>'; 
+            
+            const colors = ['var(--primary)', 'var(--secondary)'];
+            let colorIndex = 0;
+
+            for (const [name, info] of Object.entries(fullData.cats)) {
+                container.innerHTML += `
+                    <div class="cat-stat" style="border-left-color: ${colors[colorIndex % colors.length]}">
+                        <h3 style="margin: 0 0 10px 0; color: ${colors[colorIndex % colors.length]};">${name}</h3>
+                        <p><i class="fa-solid fa-weight-scale"></i> <strong>Weight:</strong> ${info.weight} kg</p>
+                        <p><i class="fa-solid fa-cake-candles"></i> <strong>Age:</strong> ${info.age} (DOB: ${info.birthday})</p>
+                        <div id="stats-${name}" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0;"></div>
+                    </div>
+                `;
+                colorIndex++;
+            }
+        }
+
+        function updateDashboard() {
+            const timeframe = document.getElementById('timeframe').value;
+            let filteredHistory = fullData.history;
+
+            if (timeframe !== 'all') {
+                const days = parseInt(timeframe);
+                const cutoff = new Date();
+                cutoff.setDate(cutoff.getDate() - days);
+                
+                filteredHistory = fullData.history.filter(entry => {
+                    return new Date(entry.date) >= cutoff;
+                });
+            }
+
+            // Update Chart
+            const labels = filteredHistory.map(h => h.date);
+            const datasets = [];
+            const catNames = Object.keys(fullData.cats);
+            
+            // Fancy Chart Colors (Blue and Pink gradients)
+            const bgColors = ['rgba(99, 102, 241, 0.2)', 'rgba(236, 72, 153, 0.2)'];
+            const borderColors = ['#6366f1', '#ec4899'];
+
+            catNames.forEach((name, index) => {
+                datasets.push({
+                    label: `${name} Weight (kg)`,
+                    data: filteredHistory.map(h => h.cats[name]?.weight || null),
+                    backgroundColor: bgColors[index % bgColors.length],
+                    borderColor: borderColors[index % borderColors.length],
+                    borderWidth: 3,
+                    pointBackgroundColor: borderColors[index % borderColors.length],
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true, // Creates the shaded area below the line
+                    tension: 0.4 // Makes the line curved instead of jagged
+                });
+            });
+
+            weightChart.data.labels = labels;
+            weightChart.data.datasets = datasets;
+            weightChart.update();
+
+            // Calculate and Update Averages/Totals
+            catNames.forEach(name => {
+                let totalVisits = 0;
+                let todayVisits = 0;
+                let todayTimes = [];
+
+                filteredHistory.forEach(h => {
+                    if (h.cats[name]) {
+                        totalVisits += h.cats[name].visits;
+                        if (h.date === fullData.history[fullData.history.length-1].date) {
+                            todayVisits = h.cats[name].visits;
+                            todayTimes = h.cats[name].times;
+                        }
+                    }
+                });
+
+                const average = (totalVisits / (filteredHistory.length || 1)).toFixed(1);
+                const statsElement = document.getElementById(`stats-${name}`);
+                if (statsElement) {
+                    statsElement.innerHTML = `
+                        <p><i class="fa-solid fa-paw"></i> <strong>Visits Today:</strong> ${todayVisits}</p>
+                        <p><i class="fa-regular fa-clock"></i> <strong>Times:</strong> ${todayTimes.join(', ') || 'None yet'}</p>
+                        <p><i class="fa-solid fa-chart-pie"></i> <strong>Avg Visits/Day:</strong> ${average} (in selected timeframe)</p>
+                    `;
+                }
+            });
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            weightChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: { 
+                    responsive: true, 
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { font: { family: "'Poppins', sans-serif", size: 14 } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#334155',
+                            bodyColor: '#334155',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 6
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            min: 3, 
+                            grid: { borderDash: [5, 5], color: '#e2e8f0' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    } 
+                }
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
