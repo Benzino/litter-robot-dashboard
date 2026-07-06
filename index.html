@@ -6,11 +6,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .status-box { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-around; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .status-box { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-value { font-weight: bold; display: block; font-size: 1.2em; }
         #statCats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .cat-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; }
         .cat-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e0; }
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .chart-container { background: white; padding: 20px; border-radius: 12px; }
     </style>
 </head>
@@ -20,15 +23,17 @@
     <h1>Litter-Robot Dashboard</h1>
     
     <div class="status-box">
-        <div>Robot: <strong id="robotName">-</strong></div>
-        <div>WiFi: <strong id="wifiStatus">-</strong></div>
-        <div>Cycles: <strong id="cycleCount">-</strong></div>
+        <div class="stat-item">Robot<span id="robotName" class="stat-value">-</span></div>
+        <div class="stat-item">WiFi<span id="wifiStatus" class="stat-value">-</span></div>
+        <div class="stat-item">Litter<span id="litterLevel" class="stat-value">-</span></div>
+        <div class="stat-item">Waste Drawer<span id="wasteLevel" class="stat-value">-</span></div>
     </div>
 
     <div id="statCats"></div>
 
-    <div class="chart-container">
-        <canvas id="activityChart"></canvas>
+    <div class="chart-row">
+        <div class="chart-container"><h3>Cat Weights (kg)</h3><canvas id="weightChart"></canvas></div>
+        <div class="chart-container"><h3>Visits by Hour</h3><canvas id="visitChart"></canvas></div>
     </div>
 </div>
 
@@ -37,41 +42,53 @@
         const response = await fetch('data.json?t=' + new Date().getTime());
         const data = await response.json();
         
-        // Update Header Stats
         document.getElementById("robotName").textContent = data.robot_metadata.name;
         document.getElementById("wifiStatus").textContent = data.robot_metadata.is_online ? "Connected" : "Offline";
-        document.getElementById("cycleCount").textContent = data.robot_metadata.cycle_count;
+        document.getElementById("litterLevel").textContent = data.robot_metadata.litter_level;
+        document.getElementById("wasteLevel").textContent = data.robot_metadata.waste_level + "%";
 
-        // Render Cats
         const container = document.getElementById("statCats");
         container.innerHTML = "";
         data.pet_profiles.forEach(cat => {
             const card = document.createElement("div");
             card.className = "cat-card";
+            // Localized time handles the DST/timezone issue
+            const lastVisit = cat.last_visit ? new Date(cat.last_visit).toLocaleString() : 'N/A';
             card.innerHTML = `
                 <img src="${cat.profile_pic}" class="cat-img" onerror="this.style.display='none'">
                 <div>
                     <h3>${cat.name}</h3>
-                    <p>Age: ${cat.age} years</p>
-                    <p>Weight: ${cat.latest_weight} kg</p>
-                    <p>Last Visit: ${cat.last_visit ? new Date(cat.last_visit).toLocaleTimeString() : 'N/A'}</p>
+                    <p>Age: ${cat.age} yrs | Weight: ${cat.latest_weight} kg</p>
+                    <p>Last: ${lastVisit}</p>
                 </div>
             `;
             container.appendChild(card);
         });
 
-        // Render Chart
-        const ctx = document.getElementById('activityChart').getContext('2d');
-        new Chart(ctx, {
+        // 1. Weight Chart
+        const wCtx = document.getElementById('weightChart').getContext('2d');
+        new Chart(wCtx, {
             type: 'line',
             data: {
-                labels: data.logs.slice(-20).map(l => new Date(l.timestamp).toLocaleTimeString()),
-                datasets: [{
-                    label: 'Activity Events',
-                    data: data.logs.slice(-20).map(l => l.weight || 0),
-                    borderColor: '#4a90e2',
-                    fill: false
-                }]
+                labels: ['History'], // Simple timeline
+                datasets: data.pet_profiles.map(cat => ({
+                    label: cat.name,
+                    data: cat.weight_history.slice(-10).map(h => h.weight / 2.20462),
+                    borderColor: '#' + Math.floor(Math.random()*16777215).toString(16)
+                }))
+            }
+        });
+
+        // 2. Visit Frequency Chart
+        const vCtx = document.getElementById('visitChart').getContext('2d');
+        const hours = new Array(24).fill(0);
+        data.logs.forEach(l => { hours[new Date(l.timestamp).getHours()]++ });
+        
+        new Chart(vCtx, {
+            type: 'bar',
+            data: {
+                labels: Array.from({length: 24}, (_, i) => i + ':00'),
+                datasets: [{ label: 'Visits', data: hours, backgroundColor: '#4a90e2' }]
             }
         });
     }
