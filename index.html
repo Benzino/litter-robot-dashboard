@@ -2,97 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Litter-Robot Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <style>
-        body { font-family: sans-serif; background-color: #f4f7f6; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .status-box { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; }
-        .stat-item { text-align: center; }
-        .stat-value { font-weight: bold; display: block; font-size: 1.2em; }
-        #statCats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .cat-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; }
-        .cat-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #cbd5e0; }
-        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .chart-container { background: white; padding: 20px; border-radius: 12px; }
+        :root { --primary: #4a90e2; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: 'Segoe UI', system-ui; background: var(--bg); margin: 0; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
+        select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Litter-Robot Dashboard</h1>
-    
-    <div class="status-box">
-        <div class="stat-item">Robot<span id="robotName" class="stat-value">-</span></div>
-        <div class="stat-item">WiFi<span id="wifiStatus" class="stat-value">-</span></div>
-        <div class="stat-item">Litter<span id="litterLevel" class="stat-value">-</span></div>
-        <div class="stat-item">Waste Drawer<span id="wasteLevel" class="stat-value">-</span></div>
+<div class="container" style="max-width: 1000px; margin: auto;">
+    <h1>🐈 Litter-Robot Dashboard</h1>
+
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Robot Status</h3>
+        <div style="display: flex; gap: 40px;">
+            <div>Network: <strong id="netStatus">...</strong></div>
+            <div>Scoops: <strong id="scoopCount">...</strong></div>
+        </div>
+        <div style="margin-top: 15px;">
+            Litter Level: <span id="litterPct">0%</span>
+            <div class="progress-bar"><div id="litterBar" class="progress-fill" style="width: 0%"></div></div>
+            Waste Drawer: <span id="wastePct">0%</span>
+            <div class="progress-bar"><div id="wasteBar" class="progress-fill" style="width: 0%"></div></div>
+        </div>
     </div>
 
-    <div id="statCats"></div>
+    <div id="catCards" class="grid"></div>
 
-    <div class="chart-row">
-        <div class="chart-container"><h3>Cat Weights (kg)</h3><canvas id="weightChart"></canvas></div>
-        <div class="chart-container"><h3>Visits by Hour</h3><canvas id="visitChart"></canvas></div>
+    <div class="card" style="margin-top: 20px;">
+        <h3>Visit Timeline (Last 14 Days)</h3>
+        <canvas id="scatterChart" height="100"></canvas>
+    </div>
+
+    <div class="grid" style="margin-top: 20px;">
+        <div class="card">
+            <h3>Weight History (kg)</h3>
+            <select id="weightPeriod" onchange="updateCharts()">
+                <option value="7">Last Week</option><option value="30">Last Month</option><option value="180">Last 6 Months</option>
+            </select>
+            <canvas id="weightChart"></canvas>
+        </div>
+        <div class="card">
+            <h3>Visits History</h3>
+            <select id="visitPeriod" onchange="updateCharts()">
+                <option value="7">Last Week</option><option value="30">Last Month</option>
+            </select>
+            <canvas id="visitChart"></canvas>
+        </div>
     </div>
 </div>
 
 <script>
-    async function loadData() {
-        const response = await fetch('data.json?t=' + new Date().getTime());
-        const data = await response.json();
-        
-        document.getElementById("robotName").textContent = data.robot_metadata.name;
-        document.getElementById("wifiStatus").textContent = data.robot_metadata.is_online ? "Connected" : "Offline";
-        document.getElementById("litterLevel").textContent = data.robot_metadata.litter_level;
-        document.getElementById("wasteLevel").textContent = data.robot_metadata.waste_level + "%";
+    let dashboardData = {};
 
-        const container = document.getElementById("statCats");
-        container.innerHTML = "";
-        data.pet_profiles.forEach(cat => {
-            const card = document.createElement("div");
-            card.className = "cat-card";
-            // Localized time handles the DST/timezone issue
-            const lastVisit = cat.last_visit ? new Date(cat.last_visit).toLocaleString() : 'N/A';
-            card.innerHTML = `
-                <img src="${cat.profile_pic}" class="cat-img" onerror="this.style.display='none'">
-                <div>
-                    <h3>${cat.name}</h3>
-                    <p>Age: ${cat.age} yrs | Weight: ${cat.latest_weight} kg</p>
-                    <p>Last: ${lastVisit}</p>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-
-        // 1. Weight Chart
-        const wCtx = document.getElementById('weightChart').getContext('2d');
-        new Chart(wCtx, {
-            type: 'line',
-            data: {
-                labels: ['History'], // Simple timeline
-                datasets: data.pet_profiles.map(cat => ({
-                    label: cat.name,
-                    data: cat.weight_history.slice(-10).map(h => h.weight / 2.20462),
-                    borderColor: '#' + Math.floor(Math.random()*16777215).toString(16)
-                }))
-            }
-        });
-
-        // 2. Visit Frequency Chart
-        const vCtx = document.getElementById('visitChart').getContext('2d');
-        const hours = new Array(24).fill(0);
-        data.logs.forEach(l => { hours[new Date(l.timestamp).getHours()]++ });
-        
-        new Chart(vCtx, {
-            type: 'bar',
-            data: {
-                labels: Array.from({length: 24}, (_, i) => i + ':00'),
-                datasets: [{ label: 'Visits', data: hours, backgroundColor: '#4a90e2' }]
-            }
-        });
+    async function init() {
+        const res = await fetch('data.json?t=' + Date.now());
+        dashboardData = await res.json();
+        render();
     }
-    loadData();
+
+    function render() {
+        // Robot Status
+        document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Connected" : "Offline";
+        document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
+        document.getElementById('litterPct').textContent = dashboardData.robot_metadata.litter_level + "%";
+        document.getElementById('litterBar').style.width = dashboardData.robot_metadata.litter_level + "%";
+        document.getElementById('wastePct').textContent = dashboardData.robot_metadata.waste_level + "%";
+        document.getElementById('wasteBar').style.width = dashboardData.robot_metadata.waste_level + "%";
+
+        // Cats
+        const container = document.getElementById('catCards');
+        dashboardData.pet_profiles.forEach(cat => {
+            container.innerHTML += `
+                <div class="card">
+                    <img src="${cat.profile_pic}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                    <h3>${cat.name} (${cat.age} yrs)</h3>
+                    <p>Weight: <strong>${cat.latest_weight} kg</strong></p>
+                    <p>Visits Today: ${cat.visits_today} | Avg: ${cat.avg_visits}</p>
+                    <p>Last Visit: ${new Date(cat.last_visit).toLocaleTimeString()}</p>
+                </div>`;
+        });
+        updateCharts();
+    }
+
+    function updateCharts() {
+        // Scatter Plot Logic
+        const ctxScatter = document.getElementById('scatterChart').getContext('2d');
+        new Chart(ctxScatter, {
+            type: 'scatter',
+            data: { datasets: dashboardData.pet_profiles.map(p => ({
+                label: p.name,
+                data: dashboardData.logs.filter(l => l.pet_name === p.name).map(l => ({
+                    x: new Date(l.timestamp).getHours(), y: new Date(l.timestamp).toLocaleDateString()
+                }))
+            }))},
+            options: { scales: { y: { type: 'category' } } }
+        });
+        // ... Add logic for weight/visit chart filtering here
+    }
+
+    init();
 </script>
 </body>
 </html>
