@@ -15,10 +15,14 @@
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; float: right; margin-top: -5px; }
         .header-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
-        /* New chart wrapper classes to force height on mobile */
         .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
         .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
+        
+        /* New layout classes for the robot card */
+        .robot-card-layout { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+        .robot-stats { flex: 1; min-width: 250px; }
+        .robot-image-container { display: flex; align-items: center; justify-content: center; }
+        .robot-image { max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
     </style>
 </head>
 <body>
@@ -27,16 +31,24 @@
     <h1>🐈 Litter-Robot Dashboard</h1>
 
     <div class="card" style="margin-bottom: 20px;">
-        <h3>Robot Status</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 20px 40px;">
-            <div>Network: <strong id="netStatus">...</strong></div>
-            <div>Scoops: <strong id="scoopCount">...</strong></div>
-        </div>
-        <div style="margin-top: 15px;">
-            Litter Level: <span id="litterPct">0%</span>
-            <div class="progress-bar"><div id="litterBar" class="progress-fill" style="width: 0%"></div></div>
-            Waste Drawer: <span id="wastePct">0%</span>
-            <div class="progress-bar"><div id="wasteBar" class="progress-fill" style="width: 0%"></div></div>
+        <div class="robot-card-layout">
+            <div class="robot-stats">
+                <h3 style="margin-top: 0;">Robot Status</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px 30px; margin-bottom: 15px;">
+                    <div>Status: <strong id="opStatus" style="color: var(--primary);">...</strong></div>
+                    <div>Network: <strong id="netStatus">...</strong></div>
+                    <div>Scoops: <strong id="scoopCount">...</strong></div>
+                </div>
+                <div style="margin-top: 15px;">
+                    Litter Level: <span id="litterPct">0%</span>
+                    <div class="progress-bar"><div id="litterBar" class="progress-fill" style="width: 0%"></div></div>
+                    Waste Drawer: <span id="wastePct">0%</span>
+                    <div class="progress-bar"><div id="wasteBar" class="progress-fill" style="width: 0%"></div></div>
+                </div>
+            </div>
+            <div class="robot-image-container">
+                <img src="lr4-white.png" onerror="this.src='https://placehold.co/200x200/ffffff/4a90e2?text=Upload+lr4-white.png+Here&font=Montserrat'" alt="White Litter-Robot 4" class="robot-image">
+            </div>
         </div>
     </div>
 
@@ -93,6 +105,8 @@
     }
 
     function renderStats() {
+        // Updated mappings
+        document.getElementById('opStatus').textContent = dashboardData.robot_metadata.status || "Unknown";
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Connected" : "Offline";
         document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
         document.getElementById('litterPct').textContent = dashboardData.robot_metadata.litter_level + "%";
@@ -154,7 +168,7 @@
             type: 'scatter',
             data: { datasets: scatterData },
             options: { 
-                maintainAspectRatio: false, // Let the CSS height control it
+                maintainAspectRatio: false, 
                 scales: { 
                     x: { title: {display: true, text: 'Time of Day (0-24h)'}, min: 0, max: 24 },
                     y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } }, min: cutoff14.getTime(), max: new Date().getTime() }
@@ -174,7 +188,7 @@
                 data: p.history.filter(l => new Date(l.timestamp) > wCutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
             options: { 
-                maintainAspectRatio: false, // Let the CSS height control it
+                maintainAspectRatio: false,
                 scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
             }
         });
@@ -199,7 +213,7 @@
             type: 'bar',
             data: { datasets: visitDatasets },
             options: { 
-                maintainAspectRatio: false, // Let the CSS height control it
+                maintainAspectRatio: false,
                 scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
             }
         });
