@@ -14,8 +14,7 @@
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         
-        /* Modern Radio Controls */
-        .period-selector { display: flex; justify-content: center; gap: 5px; margin-bottom: 25px; flex-wrap: wrap; }
+        .period-selector { display: flex; justify-content: center; gap: 5px; margin: 25px 0; flex-wrap: wrap; }
         .period-selector input { display: none; }
         .period-selector label { padding: 8px 16px; background: #e2e8f0; cursor: pointer; border-radius: 20px; font-weight: 600; transition: 0.3s; }
         .period-selector input:checked + label { background: var(--primary); color: white; }
@@ -30,14 +29,6 @@
 
 <div class="container" style="max-width: 1100px; margin: auto;">
     <h1>🐈 Litter-Robot Dashboard</h1>
-
-    <div class="period-selector">
-        <input type="radio" name="period" id="p14" value="14" checked onchange="updateCharts()"><label for="p14">14 Days</label>
-        <input type="radio" name="period" id="p30" value="30" onchange="updateCharts()"><label for="p30">30 Days</label>
-        <input type="radio" name="period" id="p90" value="90" onchange="updateCharts()"><label for="p90">90 Days</label>
-        <input type="radio" name="period" id="p180" value="180" onchange="updateCharts()"><label for="p180">180 Days</label>
-        <input type="radio" name="period" id="pAll" value="9999" onchange="updateCharts()"><label for="pAll">All Time</label>
-    </div>
 
     <div class="card" style="margin-bottom: 20px;">
         <div class="robot-card-layout">
@@ -62,6 +53,14 @@
     </div>
 
     <div id="catCards" class="grid"></div>
+
+    <div class="period-selector">
+        <input type="radio" name="period" id="p14" value="14" checked onchange="updateCharts()"><label for="p14">14 Days</label>
+        <input type="radio" name="period" id="p30" value="30" onchange="updateCharts()"><label for="p30">30 Days</label>
+        <input type="radio" name="period" id="p90" value="90" onchange="updateCharts()"><label for="p90">90 Days</label>
+        <input type="radio" name="period" id="p180" value="180" onchange="updateCharts()"><label for="p180">180 Days</label>
+        <input type="radio" name="period" id="pAll" value="9999" onchange="updateCharts()"><label for="pAll">All</label>
+    </div>
 
     <div class="card" style="margin-top: 20px;">
         <h3>Visit Timeline</h3>
@@ -97,7 +96,6 @@
         updateCharts();
     }
 
-    // Helper: Gets the selected period from the radio buttons
     function getSelectedPeriod() {
         return parseInt(document.querySelector('input[name="period"]:checked').value);
     }
@@ -106,7 +104,6 @@
         const days = getSelectedPeriod();
         const cutoff = new Date();
         cutoff.setDate(cutoff.getDate() - days);
-        const now = new Date();
 
         const ctxScatter = document.getElementById('scatterChart').getContext('2d');
         const ctxWeight = document.getElementById('weightChart').getContext('2d');
@@ -116,7 +113,7 @@
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
-        // 1. SCATTER PLOT
+        // SCATTER PLOT
         charts.scatter = new Chart(ctxScatter, {
             type: 'scatter',
             data: { datasets: dashboardData.pet_profiles.map(p => ({
@@ -130,28 +127,23 @@
                 maintainAspectRatio: false, 
                 scales: { 
                     x: { title: {display: true, text: 'Time of Day (0-24h)'}, min: 0, max: 24 },
-                    y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } }, 
-                         min: days === 9999 ? undefined : cutoff.getTime(), max: now.getTime() }
+                    y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } }
                 }
             },
             plugins: [nightShadePlugin]
         });
 
-        // 2. WEIGHT HISTORY
+        // WEIGHT HISTORY
         charts.weight = new Chart(ctxWeight, {
             type: 'line',
             data: { datasets: dashboardData.pet_profiles.map(p => ({
                 label: p.name,
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } },
-                               min: days === 9999 ? undefined : cutoff.getTime() } } 
-            }
+            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } } 
         });
 
-        // 3. VISIT HISTORY
+        // VISIT HISTORY
         charts.visit = new Chart(ctxVisit, {
             type: 'bar',
             data: { datasets: dashboardData.pet_profiles.map(p => {
@@ -165,15 +157,10 @@
                     data: Object.keys(counts).map(date => ({ x: new Date(date).getTime(), y: counts[date] }))
                 };
             })},
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } },
-                               min: days === 9999 ? undefined : cutoff.getTime() } } 
-            }
+            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } } 
         });
     }
 
-    // ... (Keep renderStats, nightShadePlugin and init as they were) ...
     function renderStats() {
         document.getElementById('opStatus').textContent = dashboardData.robot_metadata.status || "Unknown";
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Connected" : "Offline";
