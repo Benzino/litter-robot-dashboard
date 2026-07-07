@@ -13,15 +13,16 @@
         .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
-        select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; float: right; margin-top: -5px; }
-        .header-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        /* Modern Radio Controls */
+        .period-selector { display: flex; justify-content: center; gap: 5px; margin-bottom: 25px; flex-wrap: wrap; }
+        .period-selector input { display: none; }
+        .period-selector label { padding: 8px 16px; background: #e2e8f0; cursor: pointer; border-radius: 20px; font-weight: 600; transition: 0.3s; }
+        .period-selector input:checked + label { background: var(--primary); color: white; }
+
         .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
         .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
-        
-        /* New layout classes for the robot card */
-        .robot-card-layout { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-        .robot-stats { flex: 1; min-width: 250px; }
-        .robot-image-container { display: flex; align-items: center; justify-content: center; }
+        .robot-card-layout { display: flex; flex-direction: column; gap: 20px; }
         .robot-image { max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
     </style>
 </head>
@@ -30,20 +31,27 @@
 <div class="container" style="max-width: 1100px; margin: auto;">
     <h1>🐈 Litter-Robot Dashboard</h1>
 
+    <div class="period-selector">
+        <input type="radio" name="period" id="p14" value="14" checked onchange="updateCharts()"><label for="p14">14 Days</label>
+        <input type="radio" name="period" id="p30" value="30" onchange="updateCharts()"><label for="p30">30 Days</label>
+        <input type="radio" name="period" id="p90" value="90" onchange="updateCharts()"><label for="p90">90 Days</label>
+        <input type="radio" name="period" id="p180" value="180" onchange="updateCharts()"><label for="p180">180 Days</label>
+        <input type="radio" name="period" id="pAll" value="9999" onchange="updateCharts()"><label for="pAll">All Time</label>
+    </div>
+
     <div class="card" style="margin-bottom: 20px;">
-        <div class="card" style="margin-bottom: 20px;">
-        <div class="robot-card-layout" style="flex-direction: column;">
-            <div class="robot-image-container" style="margin-bottom: 15px;">
+        <div class="robot-card-layout">
+            <div style="display: flex; justify-content: center;">
                 <img src="lr4-white.png" onerror="this.src='https://placehold.co/200x200/ffffff/4a90e2?text=Upload+lr4-white.png+Here&font=Montserrat'" alt="White Litter-Robot 4" class="robot-image">
             </div>
-            <div class="robot-stats">
+            <div>
                 <h3 style="margin-top: 0;">Robot Status</h3>
                 <div style="display: flex; flex-wrap: wrap; gap: 15px 30px; margin-bottom: 15px;">
                     <div>Status: <strong id="opStatus" style="color: var(--primary);">...</strong></div>
                     <div>Network: <strong id="netStatus">...</strong></div>
                     <div>Scoops: <strong id="scoopCount">...</strong></div>
                 </div>
-                <div style="margin-top: 15px;">
+                <div>
                     Litter Level: <span id="litterPct">0%</span>
                     <div class="progress-bar"><div id="litterBar" class="progress-fill" style="width: 0%"></div></div>
                     Waste Drawer: <span id="wastePct">0%</span>
@@ -56,7 +64,7 @@
     <div id="catCards" class="grid"></div>
 
     <div class="card" style="margin-top: 20px;">
-        <h3>Visit Timeline (Last 14 Days)</h3>
+        <h3>Visit Timeline</h3>
         <div class="chart-wrapper-large">
             <canvas id="scatterChart"></canvas>
         </div>
@@ -64,25 +72,13 @@
 
     <div class="grid" style="margin-top: 20px;">
         <div class="card">
-            <div class="header-wrap">
-                <h3 style="margin: 0;">Weight History (kg)</h3>
-                <select id="weightPeriod" onchange="updateCharts()">
-                    <option value="14">Last 14 Days</option><option value="30">Last Month</option>
-                    <option value="180">Last 6 Months</option><option value="9999">All Time</option>
-                </select>
-            </div>
+            <h3 style="margin: 0 0 15px 0;">Weight History (kg)</h3>
             <div class="chart-wrapper-standard">
                 <canvas id="weightChart"></canvas>
             </div>
         </div>
         <div class="card">
-            <div class="header-wrap">
-                <h3 style="margin: 0;">Visits History</h3>
-                <select id="visitPeriod" onchange="updateCharts()">
-                    <option value="14">Last 14 Days</option><option value="30">Last Month</option>
-                    <option value="180">Last 6 Months</option><option value="9999">All Time</option>
-                </select>
-            </div>
+            <h3 style="margin: 0 0 15px 0;">Visits History</h3>
             <div class="chart-wrapper-standard">
                 <canvas id="visitChart"></canvas>
             </div>
@@ -95,18 +91,90 @@
     let charts = {};
 
     async function init() {
-        try {
-            const res = await fetch('data.json?t=' + Date.now());
-            dashboardData = await res.json();
-            renderStats();
-            updateCharts();
-        } catch (error) {
-            console.error("Error loading data:", error);
-        }
+        const res = await fetch('data.json?t=' + Date.now());
+        dashboardData = await res.json();
+        renderStats();
+        updateCharts();
     }
 
+    // Helper: Gets the selected period from the radio buttons
+    function getSelectedPeriod() {
+        return parseInt(document.querySelector('input[name="period"]:checked').value);
+    }
+
+    function updateCharts() {
+        const days = getSelectedPeriod();
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        const now = new Date();
+
+        const ctxScatter = document.getElementById('scatterChart').getContext('2d');
+        const ctxWeight = document.getElementById('weightChart').getContext('2d');
+        const ctxVisit = document.getElementById('visitChart').getContext('2d');
+
+        if(charts.scatter) charts.scatter.destroy();
+        if(charts.weight) charts.weight.destroy();
+        if(charts.visit) charts.visit.destroy();
+
+        // 1. SCATTER PLOT
+        charts.scatter = new Chart(ctxScatter, {
+            type: 'scatter',
+            data: { datasets: dashboardData.pet_profiles.map(p => ({
+                label: p.name,
+                data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({
+                    x: new Date(l.timestamp).getHours() + (new Date(l.timestamp).getMinutes()/60),
+                    y: new Date(new Date(l.timestamp).setHours(0,0,0,0)).getTime()
+                }))
+            }))},
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { 
+                    x: { title: {display: true, text: 'Time of Day (0-24h)'}, min: 0, max: 24 },
+                    y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } }, 
+                         min: days === 9999 ? undefined : cutoff.getTime(), max: now.getTime() }
+                }
+            },
+            plugins: [nightShadePlugin]
+        });
+
+        // 2. WEIGHT HISTORY
+        charts.weight = new Chart(ctxWeight, {
+            type: 'line',
+            data: { datasets: dashboardData.pet_profiles.map(p => ({
+                label: p.name,
+                data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
+            }))},
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } },
+                               min: days === 9999 ? undefined : cutoff.getTime() } } 
+            }
+        });
+
+        // 3. VISIT HISTORY
+        charts.visit = new Chart(ctxVisit, {
+            type: 'bar',
+            data: { datasets: dashboardData.pet_profiles.map(p => {
+                const counts = {};
+                p.history.filter(l => new Date(l.timestamp) > cutoff).forEach(l => {
+                    const dayStr = new Date(l.timestamp).toISOString().split('T')[0];
+                    counts[dayStr] = (counts[dayStr] || 0) + 1;
+                });
+                return {
+                    label: p.name,
+                    data: Object.keys(counts).map(date => ({ x: new Date(date).getTime(), y: counts[date] }))
+                };
+            })},
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } },
+                               min: days === 9999 ? undefined : cutoff.getTime() } } 
+            }
+        });
+    }
+
+    // ... (Keep renderStats, nightShadePlugin and init as they were) ...
     function renderStats() {
-        // Updated mappings
         document.getElementById('opStatus').textContent = dashboardData.robot_metadata.status || "Unknown";
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Connected" : "Offline";
         document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
@@ -145,80 +213,6 @@
             ctx.restore();
         }
     };
-
-    function updateCharts() {
-        const ctxScatter = document.getElementById('scatterChart').getContext('2d');
-        const ctxWeight = document.getElementById('weightChart').getContext('2d');
-        const ctxVisit = document.getElementById('visitChart').getContext('2d');
-
-        if(charts.scatter) charts.scatter.destroy();
-        if(charts.weight) charts.weight.destroy();
-        if(charts.visit) charts.visit.destroy();
-
-        // 1. SCATTER PLOT
-        const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate() - 14);
-        const scatterData = dashboardData.pet_profiles.map(p => ({
-            label: p.name,
-            data: p.history.filter(l => new Date(l.timestamp) > cutoff14).map(l => ({
-                x: new Date(l.timestamp).getHours() + (new Date(l.timestamp).getMinutes()/60),
-                y: new Date(new Date(l.timestamp).setHours(0,0,0,0)).getTime()
-            }))
-        }));
-
-        charts.scatter = new Chart(ctxScatter, {
-            type: 'scatter',
-            data: { datasets: scatterData },
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { 
-                    x: { title: {display: true, text: 'Time of Day (0-24h)'}, min: 0, max: 24 },
-                    y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } }, min: cutoff14.getTime(), max: new Date().getTime() }
-                }
-            },
-            plugins: [nightShadePlugin]
-        });
-
-        // 2. WEIGHT HISTORY
-        const wDays = parseInt(document.getElementById('weightPeriod').value);
-        const wCutoff = new Date(); wCutoff.setDate(wCutoff.getDate() - wDays);
-        
-        charts.weight = new Chart(ctxWeight, {
-            type: 'line',
-            data: { datasets: dashboardData.pet_profiles.map(p => ({
-                label: p.name,
-                data: p.history.filter(l => new Date(l.timestamp) > wCutoff).map(l => ({ x: l.timestamp, y: l.weight }))
-            }))},
-            options: { 
-                maintainAspectRatio: false,
-                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
-            }
-        });
-
-        // 3. VISIT HISTORY
-        const vDays = parseInt(document.getElementById('visitPeriod').value);
-        const vCutoff = new Date(); vCutoff.setDate(vCutoff.getDate() - vDays);
-
-        const visitDatasets = dashboardData.pet_profiles.map(p => {
-            const counts = {};
-            p.history.filter(l => new Date(l.timestamp) > vCutoff).forEach(l => {
-                const dayStr = new Date(l.timestamp).toISOString().split('T')[0];
-                counts[dayStr] = (counts[dayStr] || 0) + 1;
-            });
-            return {
-                label: p.name,
-                data: Object.keys(counts).map(date => ({ x: new Date(date).getTime(), y: counts[date] }))
-            };
-        });
-
-        charts.visit = new Chart(ctxVisit, {
-            type: 'bar',
-            data: { datasets: visitDatasets },
-            options: { 
-                maintainAspectRatio: false,
-                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
-            }
-        });
-    }
 
     init();
 </script>
