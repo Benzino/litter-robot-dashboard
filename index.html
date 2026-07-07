@@ -14,7 +14,11 @@
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         select { padding: 8px; border-radius: 8px; border: 1px solid #ddd; float: right; margin-top: -5px; }
-        .header-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .header-wrap { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        /* New chart wrapper classes to force height on mobile */
+        .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
+        .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
     </style>
 </head>
 <body>
@@ -24,7 +28,7 @@
 
     <div class="card" style="margin-bottom: 20px;">
         <h3>Robot Status</h3>
-        <div style="display: flex; gap: 40px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 20px 40px;">
             <div>Network: <strong id="netStatus">...</strong></div>
             <div>Scoops: <strong id="scoopCount">...</strong></div>
         </div>
@@ -40,29 +44,35 @@
 
     <div class="card" style="margin-top: 20px;">
         <h3>Visit Timeline (Last 14 Days)</h3>
-        <canvas id="scatterChart" height="100"></canvas>
+        <div class="chart-wrapper-large">
+            <canvas id="scatterChart"></canvas>
+        </div>
     </div>
 
     <div class="grid" style="margin-top: 20px;">
         <div class="card">
             <div class="header-wrap">
-                <h3>Weight History (kg)</h3>
+                <h3 style="margin: 0;">Weight History (kg)</h3>
                 <select id="weightPeriod" onchange="updateCharts()">
                     <option value="14">Last 14 Days</option><option value="30">Last Month</option>
                     <option value="180">Last 6 Months</option><option value="9999">All Time</option>
                 </select>
             </div>
-            <canvas id="weightChart"></canvas>
+            <div class="chart-wrapper-standard">
+                <canvas id="weightChart"></canvas>
+            </div>
         </div>
         <div class="card">
             <div class="header-wrap">
-                <h3>Visits History</h3>
+                <h3 style="margin: 0;">Visits History</h3>
                 <select id="visitPeriod" onchange="updateCharts()">
                     <option value="14">Last 14 Days</option><option value="30">Last Month</option>
                     <option value="180">Last 6 Months</option><option value="9999">All Time</option>
                 </select>
             </div>
-            <canvas id="visitChart"></canvas>
+            <div class="chart-wrapper-standard">
+                <canvas id="visitChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -72,10 +82,14 @@
     let charts = {};
 
     async function init() {
-        const res = await fetch('data.json?t=' + Date.now());
-        dashboardData = await res.json();
-        renderStats();
-        updateCharts();
+        try {
+            const res = await fetch('data.json?t=' + Date.now());
+            dashboardData = await res.json();
+            renderStats();
+            updateCharts();
+        } catch (error) {
+            console.error("Error loading data:", error);
+        }
     }
 
     function renderStats() {
@@ -90,25 +104,25 @@
         container.innerHTML = "";
         dashboardData.pet_profiles.forEach(cat => {
             container.innerHTML += `
-                <div class="card">
-                    <img src="${cat.profile_pic}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
-                    <h3>${cat.name} (${cat.age} yrs)</h3>
-                    <p>Weight: <strong>${cat.latest_weight} kg</strong></p>
-                    <p>Visits Today: ${cat.visits_today} | Avg/Day: ${cat.avg_visits}</p>
-                    <p>Last: ${cat.last_visit ? new Date(cat.last_visit).toLocaleString() : 'N/A'}</p>
+                <div class="card" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <img src="${cat.profile_pic}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border: 3px solid #e2e8f0;">
+                    <div>
+                        <h3 style="margin: 0 0 5px 0;">${cat.name} <span style="font-size: 0.8em; color: #666;">(${cat.age} yrs)</span></h3>
+                        <p style="margin: 2px 0;">Weight: <strong>${cat.latest_weight} kg</strong></p>
+                        <p style="margin: 2px 0; font-size: 0.9em;">Visits Today: ${cat.visits_today} | Avg/Day: ${cat.avg_visits}</p>
+                        <p style="margin: 2px 0; font-size: 0.9em; color: #666;">Last: ${cat.last_visit ? new Date(cat.last_visit).toLocaleString() : 'N/A'}</p>
+                    </div>
                 </div>`;
         });
     }
 
-    // Custom Plugin to darken night hours on the scatter plot
     const nightShadePlugin = {
         id: 'nightShade',
         beforeDraw: (chart) => {
             if (chart.config.type !== 'scatter') return;
             const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
             ctx.save();
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            // Shade 00:00 to 06:00 and 20:00 to 24:00
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
             const x0 = x.getPixelForValue(0), x6 = x.getPixelForValue(6);
             const x20 = x.getPixelForValue(20), x24 = x.getPixelForValue(24);
             if (x0 && x6) ctx.fillRect(x0, top, x6 - x0, bottom - top);
@@ -126,7 +140,7 @@
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
-        // 1. SCATTER PLOT (Fixed 14 Days)
+        // 1. SCATTER PLOT
         const cutoff14 = new Date(); cutoff14.setDate(cutoff14.getDate() - 14);
         const scatterData = dashboardData.pet_profiles.map(p => ({
             label: p.name,
@@ -140,15 +154,16 @@
             type: 'scatter',
             data: { datasets: scatterData },
             options: { 
+                maintainAspectRatio: false, // Let the CSS height control it
                 scales: { 
                     x: { title: {display: true, text: 'Time of Day (0-24h)'}, min: 0, max: 24 },
-                    y: { type: 'time', time: { unit: 'day' }, min: cutoff14.getTime(), max: new Date().getTime() }
+                    y: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } }, min: cutoff14.getTime(), max: new Date().getTime() }
                 }
             },
             plugins: [nightShadePlugin]
         });
 
-        // 2. WEIGHT HISTORY (Dynamic Dropdown)
+        // 2. WEIGHT HISTORY
         const wDays = parseInt(document.getElementById('weightPeriod').value);
         const wCutoff = new Date(); wCutoff.setDate(wCutoff.getDate() - wDays);
         
@@ -158,10 +173,13 @@
                 label: p.name,
                 data: p.history.filter(l => new Date(l.timestamp) > wCutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: { scales: { x: { type: 'time', time: { unit: 'day' } } } }
+            options: { 
+                maintainAspectRatio: false, // Let the CSS height control it
+                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
+            }
         });
 
-        // 3. VISIT HISTORY (Dynamic Dropdown)
+        // 3. VISIT HISTORY
         const vDays = parseInt(document.getElementById('visitPeriod').value);
         const vCutoff = new Date(); vCutoff.setDate(vCutoff.getDate() - vDays);
 
@@ -180,7 +198,10 @@
         charts.visit = new Chart(ctxVisit, {
             type: 'bar',
             data: { datasets: visitDatasets },
-            options: { scales: { x: { type: 'time', time: { unit: 'day' } } } }
+            options: { 
+                maintainAspectRatio: false, // Let the CSS height control it
+                scales: { x: { type: 'time', time: { unit: 'day', displayFormats: { day: 'MMM d' } } } } 
+            }
         });
     }
 
