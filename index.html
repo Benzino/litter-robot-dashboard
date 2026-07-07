@@ -31,7 +31,11 @@
     <h1>🐈 Litter-Robot Dashboard</h1>
 
     <div class="card" style="margin-bottom: 20px;">
-        <div class="robot-card-layout">
+        <div class="card" style="margin-bottom: 20px;">
+        <div class="robot-card-layout" style="flex-direction: column;">
+            <div class="robot-image-container" style="margin-bottom: 15px;">
+                <img src="lr4-white.png" onerror="this.src='https://placehold.co/200x200/ffffff/4a90e2?text=Upload+lr4-white.png+Here&font=Montserrat'" alt="White Litter-Robot 4" class="robot-image">
+            </div>
             <div class="robot-stats">
                 <h3 style="margin-top: 0;">Robot Status</h3>
                 <div style="display: flex; flex-wrap: wrap; gap: 15px 30px; margin-bottom: 15px;">
@@ -45,9 +49,6 @@
                     Waste Drawer: <span id="wastePct">0%</span>
                     <div class="progress-bar"><div id="wasteBar" class="progress-fill" style="width: 0%"></div></div>
                 </div>
-            </div>
-            <div class="robot-image-container">
-                <img src="lr4-white.png" onerror="this.src='https://placehold.co/200x200/ffffff/4a90e2?text=Upload+lr4-white.png+Here&font=Montserrat'" alt="White Litter-Robot 4" class="robot-image">
             </div>
         </div>
     </div>
