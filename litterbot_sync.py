@@ -26,7 +26,7 @@ async def main():
         elif hasattr(account, 'get_pets'): await account.get_pets()
     except: pass
 
-    # Load existing data to preserve history older than 30 days
+    # Load existing data to preserve history
     existing_data = {}
     if os.path.exists(DATA_FILE):
         try:
@@ -34,7 +34,6 @@ async def main():
                 existing_data = json.load(f)
         except: pass
 
-    # Map existing pet histories so we don't lose old records
     existing_pet_histories = {}
     for p in existing_data.get("pet_profiles", []):
         existing_pet_histories[p.get("name")] = p.get("history", [])
@@ -42,9 +41,15 @@ async def main():
     robot = account.robots[0] if account.robots else None
     robot_metadata = {}
     if robot:
+        # Extract and format the operating status
+        raw_status = getattr(robot, 'status', 'Unknown')
+        status_text = raw_status.name if hasattr(raw_status, 'name') else str(raw_status)
+        clean_status = status_text.replace("_", " ").title()
+
         robot_metadata = {
             "name": str(robot.name),
             "is_online": robot.is_online,
+            "status": clean_status,
             "litter_level": robot.litter_level,
             "waste_level": getattr(robot, 'waste_drawer_level', 0),
             "cycle_count": robot.cycle_count
@@ -57,10 +62,8 @@ async def main():
         data = getattr(pet, "_data", {})
         pet_name = str(data.get("name", "Unknown"))
         
-        # 1. Get raw weight history directly from the pet profile
         weight_history_raw = data.get("weightHistory", [])
         
-        # 2. Extract fresh data, converting to KG
         clean_history = []
         for entry in weight_history_raw:
             ts = entry.get("timestamp")
@@ -71,10 +74,9 @@ async def main():
                     "weight": round(float(w_lbs) / 2.20462, 2)
                 })
 
-        # 3. Merge with existing data & purge any old 'null' values!
         merged_dict = {}
         for entry in existing_pet_histories.get(pet_name, []):
-            if entry.get("weight") is not None:  # Auto-heal: ignores nulls
+            if entry.get("weight") is not None:
                 merged_dict[entry["timestamp"]] = entry
                 
         for entry in clean_history:
@@ -83,7 +85,6 @@ async def main():
         final_history = list(merged_dict.values())
         final_history.sort(key=lambda x: x["timestamp"])
 
-        # 4. Calculate Stats from the clean history
         visits_today = 0
         for entry in final_history:
             try:
@@ -107,7 +108,7 @@ async def main():
             "last_visit": final_history[-1]['timestamp'] if final_history else None,
             "visits_today": visits_today,
             "avg_visits": avg_visits,
-            "history": final_history # Graph data injected directly into the pet
+            "history": final_history
         })
 
     with open(DATA_FILE, "w") as f:
@@ -117,7 +118,6 @@ async def main():
         }, f, indent=2)
 
     await account.disconnect()
-    print("Sync complete. Nulls purged and history mapped.")
 
 if __name__ == "__main__":
     asyncio.run(main())
