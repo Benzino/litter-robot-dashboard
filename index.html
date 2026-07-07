@@ -15,12 +15,14 @@
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         .warning { color: #e53e3e; font-weight: bold; }
-        .period-selector { display: flex; justify-content: center; gap: 5px; margin: 25px 0; }
+        .period-selector { display: flex; justify-content: center; gap: 5px; margin: 25px 0; flex-wrap: wrap; }
         .period-selector input { display: none; }
         .period-selector label { padding: 8px 16px; background: #e2e8f0; cursor: pointer; border-radius: 20px; font-weight: 600; }
         .period-selector input:checked + label { background: var(--primary); color: white; }
-        .chart-wrapper { position: relative; height: 300px; width: 100%; }
+        .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
+        .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
         .info-box { margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 8px; font-size: 0.9em; text-align: center; }
+        .robot-image { max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
     </style>
 </head>
 <body>
@@ -33,11 +35,15 @@
 
     <div class="card" style="margin-bottom: 20px;">
         <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div style="display: flex; justify-content: center;"><img src="lr4-white.png" onerror="this.src='https://placehold.co/150x150/ffffff/4a90e2?text=LR4&font=Montserrat'" style="max-height: 120px;"></div>
+            <div style="display: flex; justify-content: center;">
+                <img src="lr4-white.png" onerror="this.src='https://placehold.co/200x200/ffffff/4a90e2?text=Upload+lr4-white.png+Here&font=Montserrat'" class="robot-image">
+            </div>
             <div>
                 <h3>Robot Status</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
                     <div>Status: <strong id="opStatus">...</strong></div>
+                    <div>Network: <strong id="netStatus">...</strong></div>
+                    <div>Scoops: <strong id="scoopCount">...</strong></div>
                     <div>Last Cycle: <strong id="lastSeen">...</strong></div>
                 </div>
                 <div style="margin-top: 15px;">
@@ -53,18 +59,25 @@
     <div class="period-selector">
         <input type="radio" name="period" id="p14" value="14" checked onchange="updateCharts()"><label for="p14">14d</label>
         <input type="radio" name="period" id="p30" value="30" onchange="updateCharts()"><label for="p30">30d</label>
+        <input type="radio" name="period" id="p90" value="90" onchange="updateCharts()"><label for="p90">90d</label>
+        <input type="radio" name="period" id="p180" value="180" onchange="updateCharts()"><label for="p180">180d</label>
         <input type="radio" name="period" id="pAll" value="9999" onchange="updateCharts()"><label for="pAll">All</label>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+        <h3>Visit Timeline</h3>
+        <div class="chart-wrapper-large"><canvas id="scatterChart"></canvas></div>
     </div>
 
     <div class="grid">
         <div class="card">
-            <h3>Weight History</h3>
-            <div class="chart-wrapper"><canvas id="weightChart"></canvas></div>
+            <h3>Weight History (kg)</h3>
+            <div class="chart-wrapper-standard"><canvas id="weightChart"></canvas></div>
             <div id="weightInfo" class="info-box">Click a data point for details</div>
         </div>
         <div class="card">
-            <h3>Visit History</h3>
-            <div class="chart-wrapper"><canvas id="visitChart"></canvas></div>
+            <h3>Visits History</h3>
+            <div class="chart-wrapper-standard"><canvas id="visitChart"></canvas></div>
             <div id="visitInfo" class="info-box">Click a bar for details</div>
         </div>
     </div>
@@ -78,10 +91,11 @@
         const isDark = document.body.dataset.theme === 'dark';
         document.body.dataset.theme = isDark ? 'light' : 'dark';
         localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        updateCharts(); // Re-render to pick up new colors if needed
+        updateCharts();
     }
 
     function timeAgo(date) {
+        if(!date || date === 'None') return 'N/A';
         const seconds = Math.floor((new Date() - new Date(date)) / 1000);
         if (seconds < 60) return "Just now";
         if (seconds < 3600) return Math.floor(seconds/60) + "m ago";
@@ -98,57 +112,95 @@
     }
 
     function renderStats() {
+        // Robot
         document.getElementById('opStatus').textContent = dashboardData.robot_metadata.status;
+        document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Online" : "Offline";
+        document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
         document.getElementById('lastSeen').textContent = timeAgo(dashboardData.robot_metadata.last_seen);
         document.getElementById('litterBar').style.width = dashboardData.robot_metadata.litter_level + "%";
         document.getElementById('wasteBar').style.width = dashboardData.robot_metadata.waste_level + "%";
 
+        // Cats
         const container = document.getElementById('catCards');
         container.innerHTML = "";
-        
         dashboardData.pet_profiles.forEach(cat => {
-            // Calculate 30-day average for alert
             const last30 = cat.history.filter(h => new Date(h.timestamp) > new Date(Date.now() - 30*86400000));
             const avg = last30.reduce((sum, curr) => sum + curr.weight, 0) / (last30.length || 1);
-            const isAlert = (cat.latest_weight < (avg * 0.95)); // Alert if 5% lower than avg
+            const isAlert = (cat.latest_weight < (avg * 0.95));
 
             container.innerHTML += `
-                <div class="card">
-                    <h3>${cat.name} ${isAlert ? '<span class="warning">⚠️</span>' : ''}</h3>
-                    <p>Weight: <strong>${cat.latest_weight} kg</strong> ${isAlert ? '<small>(Below Avg)</small>' : ''}</p>
-                    <p>Last: ${timeAgo(cat.last_visit)}</p>
+                <div class="card" style="display: flex; gap: 15px; align-items: center;">
+                    <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 3px solid #e2e8f0;">
+                    <div>
+                        <h3 style="margin: 0;">${cat.name} ${isAlert ? '<span class="warning">⚠️</span>' : ''}</h3>
+                        <p style="margin: 2px 0;">Weight: <strong>${cat.latest_weight} kg</strong></p>
+                        <p style="margin: 2px 0; font-size: 0.85em;">Today: ${cat.visits_today} | Avg: ${cat.avg_visits}/d</p>
+                        <p style="margin: 2px 0; font-size: 0.85em; color: #666;">Last: ${timeAgo(cat.last_visit)}</p>
+                    </div>
                 </div>`;
         });
     }
 
+    const nightShadePlugin = {
+        id: 'nightShade',
+        beforeDraw: (chart) => {
+            if (chart.config.type !== 'scatter') return;
+            const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            const x0 = x.getPixelForValue(0), x6 = x.getPixelForValue(6);
+            const x20 = x.getPixelForValue(20), x24 = x.getPixelForValue(24);
+            if (x0 && x6) ctx.fillRect(x0, top, x6 - x0, bottom - top);
+            if (x20 && x24) ctx.fillRect(x20, top, x24 - x20, bottom - top);
+            ctx.restore();
+        }
+    };
+
     function updateCharts() {
         const days = parseInt(document.querySelector('input[name="period"]:checked').value);
         const cutoff = new Date(Date.now() - days * 86400000);
-
-        // Chart helpers
-        const chartOptions = {
+        
+        const chartOptions = (targetId) => ({
             maintainAspectRatio: false,
             onClick: (e, elements) => {
                 if (elements.length > 0) {
                     const el = elements[0];
-                    const data = el.dataset.data[el.index];
-                    const target = e.chart.canvas.id === 'weightChart' ? 'weightInfo' : 'visitInfo';
-                    document.getElementById(target).textContent = `Date: ${new Date(data.x).toLocaleDateString()} | Value: ${data.y}`;
+                    const dataset = e.chart.data.datasets[el.datasetIndex];
+                    const data = dataset.data[el.index];
+                    document.getElementById(targetId).textContent = `Date: ${new Date(data.x).toLocaleDateString()} | Value: ${data.y}`;
                 }
             }
-        };
+        });
 
+        if(charts.scatter) charts.scatter.destroy();
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
+        // Scatter
+        charts.scatter = new Chart(document.getElementById('scatterChart'), {
+            type: 'scatter',
+            data: { datasets: dashboardData.pet_profiles.map(p => ({
+                label: p.name,
+                data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({
+                    x: new Date(l.timestamp).getHours() + (new Date(l.timestamp).getMinutes()/60),
+                    y: new Date(l.timestamp).getTime()
+                }))
+            }))},
+            options: { maintainAspectRatio: false, scales: { x: { min: 0, max: 24 }, y: { type: 'time' } } },
+            plugins: [nightShadePlugin]
+        });
+
+        // Weight
         charts.weight = new Chart(document.getElementById('weightChart'), {
             type: 'line',
             data: { datasets: dashboardData.pet_profiles.map(p => ({
-                label: p.name, data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
+                label: p.name,
+                data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: chartOptions
+            options: chartOptions('weightInfo')
         });
 
+        // Visits
         charts.visit = new Chart(document.getElementById('visitChart'), {
             type: 'bar',
             data: { datasets: dashboardData.pet_profiles.map(p => {
@@ -159,7 +211,7 @@
                 });
                 return { label: p.name, data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) };
             })},
-            options: chartOptions
+            options: chartOptions('visitInfo')
         });
     }
 
