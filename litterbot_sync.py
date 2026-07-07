@@ -1,19 +1,10 @@
 import os
 import json
 import asyncio
-from datetime import datetime, timedelta
-from collections import defaultdict
+from datetime import datetime
 from pylitterbot import Account
 
 DATA_FILE = "data.json"
-
-def calculate_age(birthdate_str):
-    if not birthdate_str: return "Unknown"
-    try:
-        birthdate = datetime.strptime(birthdate_str.split(' ')[0], '%Y-%m-%d')
-        today = datetime.now()
-        return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-    except: return "Unknown"
 
 async def main():
     account = Account()
@@ -25,76 +16,52 @@ async def main():
 
     try:
         if hasattr(account, 'load_pets'): await account.load_pets()
-        elif hasattr(account, 'get_pets'): await account.get_pets()
     except: pass
 
-    # Load existing to append
-    existing_data = {"logs": [], "pet_profiles": [], "robot_metadata": {}}
+    # Load existing logs to avoid duplication
+    existing_logs = []
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
-            try: existing_data = json.load(f)
+            try: existing_logs = json.load(f).get("logs", [])
             except: pass
 
-    # 1. Process Robot
-    robot = account.robots[0]
-    robot_metadata = {
-        "name": str(robot.name),
-        "is_online": robot.is_online,
-        "litter_level": robot.litter_level,
-        "waste_level": robot.waste_drawer_level,
-        "cycle_count": robot.cycle_count
-    }
+    robot_metadata = {}
+    new_logs = existing_logs
 
-    # 2. Process Logs (Deduplicate)
-    history = await robot.get_activity_history()
-    existing_timestamps = {log['timestamp'] for log in existing_data.get("logs", [])}
-    new_logs = existing_data.get("logs", [])
-    
-    for event in history:
-        ts = str(event.timestamp)
-        if ts not in existing_timestamps:
-            new_logs.append({
-                "timestamp": ts,
-                "event": str(event.action),
-                "robot": str(robot.name),
-                "weight": getattr(event, 'pet_weight', 0) / 2.20462 if hasattr(event, 'pet_weight') else 0,
-                "pet_name": getattr(event, 'pet', 'Unknown')
-            })
-
-    # 3. Process Pet Profiles
-    pet_profiles = []
-    today = datetime.now().date()
-    
-    for pet in account.pets:
-        data = getattr(pet, "_data", {})
-        # Stats
-        pet_logs = [l for l in new_logs if l.get('pet_name') == data.get('name')]
-        visits_today = len([l for l in pet_logs if datetime.fromisoformat(l['timestamp'].replace('Z', '')).date() == today])
+    for robot in account.robots:
+        # Capture Meta
+        robot_metadata = {
+            "name": str(robot.name),
+            "is_online": robot.is_online,
+            "litter_level": robot.litter_level,
+            "waste_level": robot.waste_drawer_level,
+            "cycle_count": robot.cycle_count
+        }
         
-        # Calculate Average
-        if pet_logs:
-            start_date = datetime.fromisoformat(pet_logs[0]['timestamp'].replace('Z', '')).date()
-            days_active = (today - start_date).days or 1
-            avg_visits = round(len(pet_logs) / days_active, 1)
-        else: avg_visits = 0
+        # Capture History
+        history = await robot.get_activity_history()
+        existing_timestamps = {log['timestamp'] for log in new_logs}
+        
+        for event in history:
+            ts = str(event.timestamp)
+            if ts not in existing_timestamps:
+                # Robust extraction: Check pet_weight, then weight, then fall back to None
+                weight = getattr(event, 'pet_weight', None)
+                if weight is None:
+                    weight = getattr(event, 'weight', None)
+                
+                # Only log if there is a weight, otherwise it creates messy nulls in the graph
+                if weight is not None:
+                    new_logs.append({
+                        "timestamp": ts,
+                        "event": str(event.action),
+                        "weight": round(float(weight) / 2.20462, 2), # Convert to KG
+                        "pet_name": getattr(event, 'pet', 'Unknown')
+                    })
 
-        pet_profiles.append({
-            "name": str(data.get("name", "Unknown")),
-            "age": calculate_age(data.get("birthday")),
-            "birthday": data.get("birthday"),
-            "latest_weight": round((data.get("lastWeightReading") or 0) / 2.20462, 2),
-            "profile_pic": str(data.get("s3ImageURL", "")),
-            "last_visit": pet_logs[-1]['timestamp'] if pet_logs else None,
-            "visits_today": visits_today,
-            "avg_visits": avg_visits
-        })
-
+    # Save
     with open(DATA_FILE, "w") as f:
-        json.dump({
-            "robot_metadata": robot_metadata,
-            "pet_profiles": pet_profiles,
-            "logs": new_logs
-        }, f, indent=2)
+        json.dump({"robot_metadata": robot_metadata, "logs": new_logs, "pet_profiles": []}, f, indent=2)
 
     await account.disconnect()
 
