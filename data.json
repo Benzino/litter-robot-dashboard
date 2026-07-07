@@ -6,829 +6,224 @@
     "waste_level": 15,
     "cycle_count": 2148
   },
-  "logs": [
-    {
-      "timestamp": "2026-07-03 23:49:29+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 04:57:25+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 04:57:56+00:00",
-      "event": "Pet Weight Recorded: 6.86 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 05:22:55+00:00",
-      "event": "Clean Cycles: 2127",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 05:22:55+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 05:24:01+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 05:25:06+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:04:47+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:05:02+00:00",
-      "event": "Pet Weight Recorded: 14.93 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:19:44+00:00",
-      "event": "Pet Weight Recorded: 15.34 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:44:44+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:44:44+00:00",
-      "event": "Clean Cycles: 2128",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:45:50+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 08:46:55+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:24:21+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:25:05+00:00",
-      "event": "Pet Weight Recorded: 6.95 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:50:05+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:50:05+00:00",
-      "event": "Clean Cycles: 2129",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:51:11+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 12:52:15+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:15:15+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:15:54+00:00",
-      "event": "Pet Weight Recorded: 15.08 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:40:54+00:00",
-      "event": "Clean Cycles: 2130",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:40:54+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:42:00+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 13:43:05+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 23:26:48+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 23:27:15+00:00",
-      "event": "Pet Weight Recorded: 7.01 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-04 23:44:45+00:00",
-      "event": "Pet Weight Recorded: 15.05 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 00:09:44+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 00:09:44+00:00",
-      "event": "Clean Cycles: 2131",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 00:10:50+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 00:11:54+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 03:45:25+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 03:47:25+00:00",
-      "event": "Pet Weight Recorded: 7.15 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 04:12:25+00:00",
-      "event": "Clean Cycles: 2132",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 04:12:25+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 04:13:30+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 04:14:35+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 07:56:22+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 07:56:39+00:00",
-      "event": "Pet Weight Recorded: 14.88 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 08:06:56+00:00",
-      "event": "Pet Weight Recorded: 15.09 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 08:31:55+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 08:31:55+00:00",
-      "event": "Clean Cycles: 2133",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 08:33:00+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 08:34:04+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 11:47:45+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 11:48:20+00:00",
-      "event": "Pet Weight Recorded: 7.05 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 12:13:20+00:00",
-      "event": "Clean Cycles: 2134",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 12:13:20+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 12:14:25+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 12:15:29+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:18:04+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:43:59+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:43:59+00:00",
-      "event": "Clean Cycles: 2135",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:45:04+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:46:01+00:00",
-      "event": "Litter Dispensed: 69",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 19:46:22+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 23:35:34+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-05 23:36:07+00:00",
-      "event": "Pet Weight Recorded: 7.11 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 00:01:07+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 00:01:07+00:00",
-      "event": "Clean Cycles: 2136",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 00:02:12+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 00:03:16+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 03:47:08+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 03:50:00+00:00",
-      "event": "Pet Weight Recorded: 7.12 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 04:15:00+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 04:15:00+00:00",
-      "event": "Clean Cycles: 2137",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 04:16:05+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 04:17:09+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 07:28:10+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 07:54:53+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 07:54:53+00:00",
-      "event": "Clean Cycles: 2138",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 07:55:59+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 07:57:03+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 08:40:53+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 08:41:01+00:00",
-      "event": "Pet Weight Recorded: 14.85 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:06:01+00:00",
-      "event": "Clean Cycles: 2139",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:06:01+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:07:07+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:08:11+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:51:16+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 09:52:06+00:00",
-      "event": "Pet Weight Recorded: 7.02 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 10:17:05+00:00",
-      "event": "Clean Cycles: 2140",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 10:17:05+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 10:18:10+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 10:19:14+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:08:27+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:08:45+00:00",
-      "event": "Pet Weight Recorded: 15.35 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:33:46+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:33:46+00:00",
-      "event": "Clean Cycles: 2141",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:34:51+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 13:35:55+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:19:02+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:20:26+00:00",
-      "event": "Pet Weight Recorded: 7.21 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:45:25+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:45:25+00:00",
-      "event": "Clean Cycles: 2142",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:46:30+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:47:17+00:00",
-      "event": "Litter Dispensed: 73",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 16:47:39+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 23:26:42+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 23:26:55+00:00",
-      "event": "Pet Weight Recorded: 15.14 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 23:39:00+00:00",
-      "event": "Pet Weight Recorded: 7.21 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-06 23:48:47+00:00",
-      "event": "Pet Weight Recorded: 7.04 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 00:13:47+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 00:14:52+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 00:15:49+00:00",
-      "event": "Litter Dispensed: 73",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 00:16:10+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:12:59+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:16:35+00:00",
-      "event": "Pet Weight Recorded: 7.22 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:24:04+00:00",
-      "event": "Pet Weight Recorded: 6.95 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:49:02+00:00",
-      "event": "Clean Cycles: 2144",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:49:03+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:50:08+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 04:51:12+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 08:54:52+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 08:55:06+00:00",
-      "event": "Pet Weight Recorded: 14.99 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 09:06:19+00:00",
-      "event": "Pet Weight Recorded: 15.43 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 09:10:08+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 09:11:13+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 09:12:17+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:20:15+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:21:03+00:00",
-      "event": "Pet Weight Recorded: 7.22 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:23:49+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:24:55+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:25:59+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:28:28+00:00",
-      "event": "robotCycleStatusCatRelease",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:28:29+00:00",
-      "event": "LitterBoxStatus.CAT_SENSOR_INTERRUPTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:29:46+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:29:47+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:30:56+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:32:01+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:55:51+00:00",
-      "event": "LitterBoxStatus.CAT_DETECTED",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 14:56:05+00:00",
-      "event": "Pet Weight Recorded: 15.17 lbs",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 15:21:05+00:00",
-      "event": "Clean Cycles: 2148",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 15:22:13+00:00",
-      "event": "DFILevelPercent",
-      "robot": "Litter-Robot 4",
-      "weight": null
-    },
-    {
-      "timestamp": "2026-07-07 15:23:17+00:00",
-      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
-      "robot": "Litter-Robot 4",
-      "weight": null
+  "pet_profiles": [
+    {
+      "name": "Shiv",
+      "age": 3,
+      "latest_weight": 6.88,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDG774FYMP&Signature=AEngUGN3scI7kX8KP64cEB7qr%2BA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIFevNjOp%2FRP0SeYXSrw5x%2FgJE9oe3j1CVcVucqOEcX1OAiAyW3XFzypJPUuv7LhlilNkrS32yDC72sJz%2BiG74ZS7CCquBAh2EAQaDDM0NDc0NTQwOTA5NCIMgkm79%2BoahdXGbiWMKosEBIW9zNUfdYWFqSwdUeBVbhO6mc%2BZmRu4mygacx6g%2BeGogmPNeGdT4vukMVakTjuY8HLvU8CCHCPir6w7CNwdVPsvw2WNClbjaq5Of4mNxsLgxg2uVswBrJwh8QyAOu4dViyG0jPi3bTc%2FB2Zj3oHhLqDPCjwWxdx42k1dq06ERv9U40GeeYmP8ARuBxRSWFHfYDAeTdyWzoOBaQKWTejbVdRv9%2F6o4Lkh5rHQ6HGzZRFL0NG49uKKU1jT1fs0FWpB%2Fy8TEfb5U%2BAdF%2FRWf%2BElMGLtQg3aOEItSwvTcfyEAO3rQpEi5wnaoaOtZLno029csGQjEz%2BixtG%2FUTQAA6W%2FjbYO%2BK5HYgTK1ep8VyvrIzysJlq%2FeF5nl%2FdYRqlOXVzPUDCqfNak1yatR25ZZEbLlhZlTSz98UX860oUTRJAC6SHGM5cUMKdYfNXzxwaDO1gsiowlDIPW1uXl8QUVChXD2Ee%2FLM6sA76PmOU%2B2LkK0vv7BMPxNO0uxGmrjcKIxARtq5VGlcRfwaOf9et5qE9RguaQe0WZ%2BkH2N8A6Bc7yVM8wbIHsr%2BHuwZnpY3oCDGScMKl7uEA6XTB%2BD3Yjjv8sKpCXplcSqH%2BPhn111Y5WPXG7dBDoeVObXva1bKa%2B1oiMqJ7P8TvySMJGxom0FLzIZepuntEBb9%2BcAO0uoYBaM1IlClQhxzZodmjDDa0bXSBjqjAdpVIswh0byuuWEAbqBI4AK1hMb6Z%2ByqWVr8Mevrj4LPaNzieNmhn6EqvZEEvm9kXi92ngFFc9dfucUu1nOsLeHTlyoTukN0Vk%2F3VQVXvaiQbX%2BQofXkKS%2BtSWl1o4wNd9xXspxHvgBA0WK9URCO%2BDNsYVTEcMQZYvFeug9A27ro0wO%2FdwAG3jry74UQsM2YhSQ1gotcrLPwN3ZA4Dam5xo884A%3D&Expires=1783468870",
+      "last_visit": "2026-07-07T14:56:08",
+      "visits_today": 3,
+      "avg_visits": 3.8,
+      "history": [
+        {
+          "timestamp": "2026-07-01T08:08:50",
+          "weight": 6.78
+        },
+        {
+          "timestamp": "2026-07-01T08:18:35",
+          "weight": 7.0
+        },
+        {
+          "timestamp": "2026-07-01T16:45:44",
+          "weight": 6.94
+        },
+        {
+          "timestamp": "2026-07-02T03:32:54",
+          "weight": 6.9
+        },
+        {
+          "timestamp": "2026-07-02T08:33:17",
+          "weight": 6.94
+        },
+        {
+          "timestamp": "2026-07-02T12:42:59",
+          "weight": 6.79
+        },
+        {
+          "timestamp": "2026-07-02T20:44:13",
+          "weight": 6.89
+        },
+        {
+          "timestamp": "2026-07-03T04:52:04",
+          "weight": 6.81
+        },
+        {
+          "timestamp": "2026-07-03T07:50:20",
+          "weight": 7.03
+        },
+        {
+          "timestamp": "2026-07-03T11:21:37",
+          "weight": 6.79
+        },
+        {
+          "timestamp": "2026-07-03T20:08:01",
+          "weight": 6.75
+        },
+        {
+          "timestamp": "2026-07-04T08:05:06",
+          "weight": 6.77
+        },
+        {
+          "timestamp": "2026-07-04T08:19:47",
+          "weight": 6.96
+        },
+        {
+          "timestamp": "2026-07-04T13:15:59",
+          "weight": 6.84
+        },
+        {
+          "timestamp": "2026-07-04T23:44:48",
+          "weight": 6.83
+        },
+        {
+          "timestamp": "2026-07-05T07:56:42",
+          "weight": 6.75
+        },
+        {
+          "timestamp": "2026-07-05T08:06:57",
+          "weight": 6.84
+        },
+        {
+          "timestamp": "2026-07-06T08:41:05",
+          "weight": 6.74
+        },
+        {
+          "timestamp": "2026-07-06T13:08:52",
+          "weight": 6.96
+        },
+        {
+          "timestamp": "2026-07-06T23:26:57",
+          "weight": 6.87
+        },
+        {
+          "timestamp": "2026-07-07T08:55:08",
+          "weight": 6.8
+        },
+        {
+          "timestamp": "2026-07-07T09:06:22",
+          "weight": 7.0
+        },
+        {
+          "timestamp": "2026-07-07T14:56:08",
+          "weight": 6.88
+        }
+      ]
+    },
+    {
+      "name": "Baby",
+      "age": 3,
+      "latest_weight": 3.27,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDG774FYMP&Signature=uByz3hEM11frwTpnfk06RcMNJNg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIFevNjOp%2FRP0SeYXSrw5x%2FgJE9oe3j1CVcVucqOEcX1OAiAyW3XFzypJPUuv7LhlilNkrS32yDC72sJz%2BiG74ZS7CCquBAh2EAQaDDM0NDc0NTQwOTA5NCIMgkm79%2BoahdXGbiWMKosEBIW9zNUfdYWFqSwdUeBVbhO6mc%2BZmRu4mygacx6g%2BeGogmPNeGdT4vukMVakTjuY8HLvU8CCHCPir6w7CNwdVPsvw2WNClbjaq5Of4mNxsLgxg2uVswBrJwh8QyAOu4dViyG0jPi3bTc%2FB2Zj3oHhLqDPCjwWxdx42k1dq06ERv9U40GeeYmP8ARuBxRSWFHfYDAeTdyWzoOBaQKWTejbVdRv9%2F6o4Lkh5rHQ6HGzZRFL0NG49uKKU1jT1fs0FWpB%2Fy8TEfb5U%2BAdF%2FRWf%2BElMGLtQg3aOEItSwvTcfyEAO3rQpEi5wnaoaOtZLno029csGQjEz%2BixtG%2FUTQAA6W%2FjbYO%2BK5HYgTK1ep8VyvrIzysJlq%2FeF5nl%2FdYRqlOXVzPUDCqfNak1yatR25ZZEbLlhZlTSz98UX860oUTRJAC6SHGM5cUMKdYfNXzxwaDO1gsiowlDIPW1uXl8QUVChXD2Ee%2FLM6sA76PmOU%2B2LkK0vv7BMPxNO0uxGmrjcKIxARtq5VGlcRfwaOf9et5qE9RguaQe0WZ%2BkH2N8A6Bc7yVM8wbIHsr%2BHuwZnpY3oCDGScMKl7uEA6XTB%2BD3Yjjv8sKpCXplcSqH%2BPhn111Y5WPXG7dBDoeVObXva1bKa%2B1oiMqJ7P8TvySMJGxom0FLzIZepuntEBb9%2BcAO0uoYBaM1IlClQhxzZodmjDDa0bXSBjqjAdpVIswh0byuuWEAbqBI4AK1hMb6Z%2ByqWVr8Mevrj4LPaNzieNmhn6EqvZEEvm9kXi92ngFFc9dfucUu1nOsLeHTlyoTukN0Vk%2F3VQVXvaiQbX%2BQofXkKS%2BtSWl1o4wNd9xXspxHvgBA0WK9URCO%2BDNsYVTEcMQZYvFeug9A27ro0wO%2FdwAG3jry74UQsM2YhSQ1gotcrLPwN3ZA4Dam5xo884A%3D&Expires=1783468870",
+      "last_visit": "2026-07-07T14:21:08",
+      "visits_today": 3,
+      "avg_visits": 4.3,
+      "history": [
+        {
+          "timestamp": "2026-07-01T01:22:06",
+          "weight": 3.18
+        },
+        {
+          "timestamp": "2026-07-01T09:22:35",
+          "weight": 3.1
+        },
+        {
+          "timestamp": "2026-07-01T22:03:41",
+          "weight": 3.18
+        },
+        {
+          "timestamp": "2026-07-01T23:17:12",
+          "weight": 3.21
+        },
+        {
+          "timestamp": "2026-07-02T08:56:47",
+          "weight": 3.13
+        },
+        {
+          "timestamp": "2026-07-02T22:15:20",
+          "weight": 3.21
+        },
+        {
+          "timestamp": "2026-07-02T23:58:21",
+          "weight": 3.24
+        },
+        {
+          "timestamp": "2026-07-03T11:53:52",
+          "weight": 3.16
+        },
+        {
+          "timestamp": "2026-07-03T20:43:51",
+          "weight": 3.19
+        },
+        {
+          "timestamp": "2026-07-03T22:19:27",
+          "weight": 3.17
+        },
+        {
+          "timestamp": "2026-07-03T23:19:12",
+          "weight": 3.24
+        },
+        {
+          "timestamp": "2026-07-03T23:22:23",
+          "weight": 3.14
+        },
+        {
+          "timestamp": "2026-07-04T04:58:00",
+          "weight": 3.11
+        },
+        {
+          "timestamp": "2026-07-04T12:25:08",
+          "weight": 3.15
+        },
+        {
+          "timestamp": "2026-07-04T23:27:18",
+          "weight": 3.18
+        },
+        {
+          "timestamp": "2026-07-05T03:47:31",
+          "weight": 3.24
+        },
+        {
+          "timestamp": "2026-07-05T11:48:24",
+          "weight": 3.2
+        },
+        {
+          "timestamp": "2026-07-05T23:36:13",
+          "weight": 3.23
+        },
+        {
+          "timestamp": "2026-07-06T03:50:03",
+          "weight": 3.23
+        },
+        {
+          "timestamp": "2026-07-06T09:52:11",
+          "weight": 3.18
+        },
+        {
+          "timestamp": "2026-07-06T16:20:28",
+          "weight": 3.27
+        },
+        {
+          "timestamp": "2026-07-06T23:39:03",
+          "weight": 3.27
+        },
+        {
+          "timestamp": "2026-07-06T23:48:53",
+          "weight": 3.19
+        },
+        {
+          "timestamp": "2026-07-07T04:16:40",
+          "weight": 3.27
+        },
+        {
+          "timestamp": "2026-07-07T04:24:05",
+          "weight": 3.15
+        },
+        {
+          "timestamp": "2026-07-07T14:21:08",
+          "weight": 3.27
+        }
+      ]
     }
-  ],
-  "pet_profiles": []
+  ]
 }
