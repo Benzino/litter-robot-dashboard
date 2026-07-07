@@ -6,6 +6,14 @@ from pylitterbot import Account
 
 DATA_FILE = "data.json"
 
+def calculate_age(birthdate_str):
+    if not birthdate_str: return "Unknown"
+    try:
+        birthdate = datetime.strptime(birthdate_str.split(' ')[0], '%Y-%m-%d')
+        today = datetime.now()
+        return today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    except: return "Unknown"
+
 async def main():
     account = Account()
     await account.connect(
@@ -13,57 +21,103 @@ async def main():
         password=os.environ["WHISKER_PASSWORD"], 
         load_robots=True
     )
-
     try:
         if hasattr(account, 'load_pets'): await account.load_pets()
+        elif hasattr(account, 'get_pets'): await account.get_pets()
     except: pass
 
-    # Load existing logs to avoid duplication
-    existing_logs = []
+    # Load existing data to preserve history older than 30 days
+    existing_data = {}
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            try: existing_logs = json.load(f).get("logs", [])
-            except: pass
+        try:
+            with open(DATA_FILE, "r") as f:
+                existing_data = json.load(f)
+        except: pass
 
+    # Map existing pet histories so we don't lose old records
+    existing_pet_histories = {}
+    for p in existing_data.get("pet_profiles", []):
+        existing_pet_histories[p.get("name")] = p.get("history", [])
+
+    robot = account.robots[0] if account.robots else None
     robot_metadata = {}
-    new_logs = existing_logs
-
-    for robot in account.robots:
-        # Capture Meta
+    if robot:
         robot_metadata = {
             "name": str(robot.name),
             "is_online": robot.is_online,
             "litter_level": robot.litter_level,
-            "waste_level": robot.waste_drawer_level,
+            "waste_level": getattr(robot, 'waste_drawer_level', 0),
             "cycle_count": robot.cycle_count
         }
-        
-        # Capture History
-        history = await robot.get_activity_history()
-        existing_timestamps = {log['timestamp'] for log in new_logs}
-        
-        for event in history:
-            ts = str(event.timestamp)
-            if ts not in existing_timestamps:
-                # Robust extraction: Check pet_weight, then weight, then fall back to None
-                weight = getattr(event, 'pet_weight', None)
-                if weight is None:
-                    weight = getattr(event, 'weight', None)
-                
-                # Only log if there is a weight, otherwise it creates messy nulls in the graph
-                if weight is not None:
-                    new_logs.append({
-                        "timestamp": ts,
-                        "event": str(event.action),
-                        "weight": round(float(weight) / 2.20462, 2), # Convert to KG
-                        "pet_name": getattr(event, 'pet', 'Unknown')
-                    })
 
-    # Save
+    pet_profiles = []
+    today_date = datetime.now().date()
+
+    for pet in account.pets:
+        data = getattr(pet, "_data", {})
+        pet_name = str(data.get("name", "Unknown"))
+        
+        # 1. Get raw weight history directly from the pet profile
+        weight_history_raw = data.get("weightHistory", [])
+        
+        # 2. Extract fresh data, converting to KG
+        clean_history = []
+        for entry in weight_history_raw:
+            ts = entry.get("timestamp")
+            w_lbs = entry.get("weight")
+            if ts and w_lbs is not None:
+                clean_history.append({
+                    "timestamp": ts,
+                    "weight": round(float(w_lbs) / 2.20462, 2)
+                })
+
+        # 3. Merge with existing data & purge any old 'null' values!
+        merged_dict = {}
+        for entry in existing_pet_histories.get(pet_name, []):
+            if entry.get("weight") is not None:  # Auto-heal: ignores nulls
+                merged_dict[entry["timestamp"]] = entry
+                
+        for entry in clean_history:
+            merged_dict[entry["timestamp"]] = entry
+            
+        final_history = list(merged_dict.values())
+        final_history.sort(key=lambda x: x["timestamp"])
+
+        # 4. Calculate Stats from the clean history
+        visits_today = 0
+        for entry in final_history:
+            try:
+                dt = datetime.fromisoformat(entry['timestamp'].replace('Z', '+00:00'))
+                if dt.date() == today_date: visits_today += 1
+            except: pass
+
+        avg_visits = 0
+        if final_history:
+            try:
+                start_dt = datetime.fromisoformat(final_history[0]['timestamp'].replace('Z', '+00:00'))
+                days_active = (today_date - start_dt.date()).days or 1
+                avg_visits = round(len(final_history) / days_active, 1)
+            except: pass
+
+        pet_profiles.append({
+            "name": pet_name,
+            "age": calculate_age(data.get("birthday")),
+            "latest_weight": round(float(data.get("lastWeightReading", 0)) / 2.20462, 2) if data.get("lastWeightReading") else "Unknown",
+            "profile_pic": str(data.get("s3ImageURL", "")),
+            "last_visit": final_history[-1]['timestamp'] if final_history else None,
+            "visits_today": visits_today,
+            "avg_visits": avg_visits,
+            "history": final_history # Graph data injected directly into the pet
+        })
+
     with open(DATA_FILE, "w") as f:
-        json.dump({"robot_metadata": robot_metadata, "logs": new_logs, "pet_profiles": []}, f, indent=2)
+        json.dump({
+            "robot_metadata": robot_metadata,
+            "pet_profiles": pet_profiles
+        }, f, indent=2)
 
     await account.disconnect()
+    print("Sync complete. Nulls purged and history mapped.")
 
 if __name__ == "__main__":
     asyncio.run(main())
