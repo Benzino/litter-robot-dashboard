@@ -3,16 +3,16 @@
     "name": "Litter-Robot 4",
     "is_online": true,
     "litter_level": 90.0,
-    "cycle_count": 2145,
-    "waste_level": 75
+    "cycle_count": 2148,
+    "waste_level": 15
   },
   "pet_profiles": [
     {
       "name": "Shiv",
       "age": 3,
-      "latest_weight": 7.0,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDMZMZMVNQ&Signature=CDWPPSo3B79EXW8qcP%2FEt5pc1pw%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIEBebW%2Bco1e78HyMTDfXcIYyGy7BH9ldIPW7J14erNl8AiBkJ8gLcx4DUzOoiLHuPlC99A6Y9PnCRdHCMB4ITZ90XiquBAhuEAQaDDM0NDc0NTQwOTA5NCIMpCjWiQpHy2R%2BXiyTKosELYsYRPIX4OgFhEzNfWe7EqiERzpWA1k3REIusstFpaeVAo7PPgaZbs6DE9jO7KFXND17uhItC4IvtvxXlolMp5p7XdnkcMXS2O2kUXhS21whyP%2Frz7VZ6vOtfZ4hEY1lSPBq3PU4xXgvH16UrHS6NtegScJtddZF5WhCgMpcs8S5UUBPosgOPYhY%2FFYbdA5l%2BpTL%2FGzEv00FpcbQt431BJr2fe%2FygdveBh2Mqi3C1U5G2Z81GdSnuS7BHQkzfUBiUpwPM5tSSl0x2XXHT1eFpEpTt9TvGJ%2Buta6qsocTd2%2FlI3bvfmW%2BOGlBIJUD%2B65yIAIDgZZN%2FoE2z%2BwyXpOVSEwqGurKkr9pyjMhxAA1p26YHzD3aYCPvbffC2rpI5XU0DbTLrrqWsfJKiOqwsn5MX3hhAEMxjMbqmc7QCHRxJaml7YuNQLb%2BpXsHhcWuvMZXR1A1FCtCGMkYBb3Lo2bSNLzSBQm%2Fk8Cp3gJ86XwesxBtKq0UJSmkw%2FJUZXYHSwOQNFz%2FzyLuQhGJRE3HEbjPVlVpfJ3wOA7poFL5OHKOzzGPL1l6TQK1x6EjTGmJAQrN3MryFyoyD4XqYgtl4RbJSBRZRvKIcNlfTWK78reJimii4rPgOV4xNUQKjf9qsV7hedGXrkD4oPkPlSVq12jRGDC7F67L0mhuUlFriI9x1aN9XGPJhmtGRHh9zDz8bPSBjqjAczfLev%2BU3CAZF4wg9iIh88pSBbLIZ7bDQqtGCdinNh5MOFg3Xk8bEGlkWrg9gFA2ennmoTjwAJb%2BrJOyk4wGqZl6aYYSRwPsamcJvNhAT1Kg692EvflETjQVjSureWkjjaKd8N8Db%2FRq216puFBNZi6z%2FuiEeEhl1KhFqB7Li%2FBWQR1ivwkD6kg9wMWuKp4IcVIeVXGcuWqblM6km8FtJ9Ao2Y%3D&Expires=1783433383",
-      "last_visit": "2026-07-07T09:06:22",
+      "latest_weight": 6.88,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDNP7FWCJW&Signature=8dP4xw3uKhHJ4r27pi6eBfTGXEY%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCICfPtWr1fgRcmBfAXd47dFFDFSEk4mWSyHBfXXCo0DLfAiBPaCuMDYFbLHxvgKk0RQ0Cir7MCCLL126SR%2BDz7YrXsSquBAhwEAQaDDM0NDc0NTQwOTA5NCIMPDP25UxIvesjxGqLKosE18bV9HmHZdAqcZcH6tA%2FqcFSnDe1NUzlIVEAALVtDzNnSF34QJIuD%2BD2ID5f3o9ZFOp%2FpwLeaeQPEMuKYSoS7hnedXgA7hWgUvAzZbX6%2BHbTCHjYA3J6RpPyaWbVoVB1bUu1pi0TDVPWAECvSpEVUxkUBNQMV2j36cIxzHBJSq2KdCB3VpASBNWBOD7qeDYlnWvEetqk7k1sSotNFS5LPaFJc8B4rKL26p7o7MAl8ycP%2FxvSf4BtZUI%2FqxEES6iGAxtCv29fSiUfm2tXe3PGH4bjmR3YCATxEYuu90f%2F%2FwpHsEzKIFdbDmBpHwSfxdIIVASyFRVjGEhPFRjDsYVE6nS%2Bt0uQV7vT%2F1d5Faz8pJhGQMYmTTyS9vOMPaHMk%2BkJVB3My0i7WwP4peBLH50QSZvnmG63tbPsG3GhhiuevHMq5p6XjCLrzMeHLK8eMg4uly7Qd0uK2pQ1%2BxqzAGi3G%2FsIttoeA%2BZS6N%2B9V1O8cb6IYPz0vDeYL5eTsnL8z0iDv0A8m959JiLStxKxn7WhLSJKAOUuZjzQsemZYl1yc5IaDdw5ELZgzoS5c3vXOL49QRBdOmzvcvBh7Rl5GsPf2h1c%2BmWEeMx189hqUpdJEDr62haLHR5cNEz71mPcU3uO5Gl2dWMTG54kk06Hdv9gVrfsiN0qEyJRX9MG5ZYEId1rxt8d8yj43k6c%2FjCInbTSBjqjAe2HPbby7Gwg5mt3Xiina64gN%2F6KXLf7k5AJfQnKOtXCVReaEmEzxdHM2h2zUV7UtYrkPvc8xIUQIzpClKQ2hOKaWt5jozCr%2BJ01M2hUB4R3me4lFcVpkEVkzW7xja6s2QnLhlVO6kAEgjsSlpSXyNl%2BO7Cxdqa%2FpWs7NWa93g64afmnOGbVWVHSnBsEe3LPfkTxDuh4ogIeqIKyAdCR02vjQx4%3D&Expires=1783444529",
+      "last_visit": "2026-07-07T14:56:08",
       "weight_history": [
         {
           "weight": 14.95,
@@ -101,15 +101,19 @@
         {
           "weight": 15.43,
           "timestamp": "2026-07-07T09:06:22"
+        },
+        {
+          "weight": 15.17,
+          "timestamp": "2026-07-07T14:56:08"
         }
       ]
     },
     {
       "name": "Baby",
       "age": 3,
-      "latest_weight": 3.15,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDMZMZMVNQ&Signature=danml1vOHC8U%2FGTyriEr01neljI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIEBebW%2Bco1e78HyMTDfXcIYyGy7BH9ldIPW7J14erNl8AiBkJ8gLcx4DUzOoiLHuPlC99A6Y9PnCRdHCMB4ITZ90XiquBAhuEAQaDDM0NDc0NTQwOTA5NCIMpCjWiQpHy2R%2BXiyTKosELYsYRPIX4OgFhEzNfWe7EqiERzpWA1k3REIusstFpaeVAo7PPgaZbs6DE9jO7KFXND17uhItC4IvtvxXlolMp5p7XdnkcMXS2O2kUXhS21whyP%2Frz7VZ6vOtfZ4hEY1lSPBq3PU4xXgvH16UrHS6NtegScJtddZF5WhCgMpcs8S5UUBPosgOPYhY%2FFYbdA5l%2BpTL%2FGzEv00FpcbQt431BJr2fe%2FygdveBh2Mqi3C1U5G2Z81GdSnuS7BHQkzfUBiUpwPM5tSSl0x2XXHT1eFpEpTt9TvGJ%2Buta6qsocTd2%2FlI3bvfmW%2BOGlBIJUD%2B65yIAIDgZZN%2FoE2z%2BwyXpOVSEwqGurKkr9pyjMhxAA1p26YHzD3aYCPvbffC2rpI5XU0DbTLrrqWsfJKiOqwsn5MX3hhAEMxjMbqmc7QCHRxJaml7YuNQLb%2BpXsHhcWuvMZXR1A1FCtCGMkYBb3Lo2bSNLzSBQm%2Fk8Cp3gJ86XwesxBtKq0UJSmkw%2FJUZXYHSwOQNFz%2FzyLuQhGJRE3HEbjPVlVpfJ3wOA7poFL5OHKOzzGPL1l6TQK1x6EjTGmJAQrN3MryFyoyD4XqYgtl4RbJSBRZRvKIcNlfTWK78reJimii4rPgOV4xNUQKjf9qsV7hedGXrkD4oPkPlSVq12jRGDC7F67L0mhuUlFriI9x1aN9XGPJhmtGRHh9zDz8bPSBjqjAczfLev%2BU3CAZF4wg9iIh88pSBbLIZ7bDQqtGCdinNh5MOFg3Xk8bEGlkWrg9gFA2ennmoTjwAJb%2BrJOyk4wGqZl6aYYSRwPsamcJvNhAT1Kg692EvflETjQVjSureWkjjaKd8N8Db%2FRq216puFBNZi6z%2FuiEeEhl1KhFqB7Li%2FBWQR1ivwkD6kg9wMWuKp4IcVIeVXGcuWqblM6km8FtJ9Ao2Y%3D&Expires=1783433383",
-      "last_visit": "2026-07-07T04:24:05",
+      "latest_weight": 3.27,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDNP7FWCJW&Signature=AhNsJFXUR6j8LOamxlO4Ity%2BeXA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEKf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCICfPtWr1fgRcmBfAXd47dFFDFSEk4mWSyHBfXXCo0DLfAiBPaCuMDYFbLHxvgKk0RQ0Cir7MCCLL126SR%2BDz7YrXsSquBAhwEAQaDDM0NDc0NTQwOTA5NCIMPDP25UxIvesjxGqLKosE18bV9HmHZdAqcZcH6tA%2FqcFSnDe1NUzlIVEAALVtDzNnSF34QJIuD%2BD2ID5f3o9ZFOp%2FpwLeaeQPEMuKYSoS7hnedXgA7hWgUvAzZbX6%2BHbTCHjYA3J6RpPyaWbVoVB1bUu1pi0TDVPWAECvSpEVUxkUBNQMV2j36cIxzHBJSq2KdCB3VpASBNWBOD7qeDYlnWvEetqk7k1sSotNFS5LPaFJc8B4rKL26p7o7MAl8ycP%2FxvSf4BtZUI%2FqxEES6iGAxtCv29fSiUfm2tXe3PGH4bjmR3YCATxEYuu90f%2F%2FwpHsEzKIFdbDmBpHwSfxdIIVASyFRVjGEhPFRjDsYVE6nS%2Bt0uQV7vT%2F1d5Faz8pJhGQMYmTTyS9vOMPaHMk%2BkJVB3My0i7WwP4peBLH50QSZvnmG63tbPsG3GhhiuevHMq5p6XjCLrzMeHLK8eMg4uly7Qd0uK2pQ1%2BxqzAGi3G%2FsIttoeA%2BZS6N%2B9V1O8cb6IYPz0vDeYL5eTsnL8z0iDv0A8m959JiLStxKxn7WhLSJKAOUuZjzQsemZYl1yc5IaDdw5ELZgzoS5c3vXOL49QRBdOmzvcvBh7Rl5GsPf2h1c%2BmWEeMx189hqUpdJEDr62haLHR5cNEz71mPcU3uO5Gl2dWMTG54kk06Hdv9gVrfsiN0qEyJRX9MG5ZYEId1rxt8d8yj43k6c%2FjCInbTSBjqjAe2HPbby7Gwg5mt3Xiina64gN%2F6KXLf7k5AJfQnKOtXCVReaEmEzxdHM2h2zUV7UtYrkPvc8xIUQIzpClKQ2hOKaWt5jozCr%2BJ01M2hUB4R3me4lFcVpkEVkzW7xja6s2QnLhlVO6kAEgjsSlpSXyNl%2BO7Cxdqa%2FpWs7NWa93g64afmnOGbVWVHSnBsEe3LPfkTxDuh4ogIeqIKyAdCR02vjQx4%3D&Expires=1783444529",
+      "last_visit": "2026-07-07T14:21:08",
       "weight_history": [
         {
           "weight": 7.01,
@@ -210,6 +214,10 @@
         {
           "weight": 6.95,
           "timestamp": "2026-07-07T04:24:05"
+        },
+        {
+          "weight": 7.22,
+          "timestamp": "2026-07-07T14:21:08"
         }
       ]
     }
@@ -937,6 +945,102 @@
     },
     {
       "timestamp": "2026-07-07 09:12:17+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:20:15+00:00",
+      "event": "LitterBoxStatus.CAT_DETECTED",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:21:03+00:00",
+      "event": "Pet Weight Recorded: 7.22 lbs",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:23:49+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:24:55+00:00",
+      "event": "DFILevelPercent",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:25:59+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:28:28+00:00",
+      "event": "robotCycleStatusCatRelease",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:28:29+00:00",
+      "event": "LitterBoxStatus.CAT_SENSOR_INTERRUPTED",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:29:46+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:29:47+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:30:56+00:00",
+      "event": "DFILevelPercent",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:32:01+00:00",
+      "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:55:51+00:00",
+      "event": "LitterBoxStatus.CAT_DETECTED",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 14:56:05+00:00",
+      "event": "Pet Weight Recorded: 15.17 lbs",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 15:21:05+00:00",
+      "event": "Clean Cycles: 2148",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 15:22:13+00:00",
+      "event": "DFILevelPercent",
+      "robot": "Litter-Robot 4",
+      "weight": null
+    },
+    {
+      "timestamp": "2026-07-07 15:23:17+00:00",
       "event": "LitterBoxStatus.CLEAN_CYCLE_COMPLETE",
       "robot": "Litter-Robot 4",
       "weight": null
