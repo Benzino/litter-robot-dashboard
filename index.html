@@ -62,14 +62,18 @@
 
 <script>
     let dashboardData = {};
+    let charts = {}; // To store chart instances
 
     async function init() {
-        const res = await fetch('data.json?t=' + Date.now());
-        dashboardData = await res.json();
-        render();
+        try {
+            const res = await fetch('data.json?t=' + Date.now());
+            dashboardData = await res.json();
+            renderStats();
+            updateCharts();
+        } catch (e) { console.error("Error loading data:", e); }
     }
 
-    function render() {
+    function renderStats() {
         // Robot Status
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Connected" : "Offline";
         document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
@@ -78,8 +82,9 @@
         document.getElementById('wastePct').textContent = dashboardData.robot_metadata.waste_level + "%";
         document.getElementById('wasteBar').style.width = dashboardData.robot_metadata.waste_level + "%";
 
-        // Cats
+        // Cats Profile
         const container = document.getElementById('catCards');
+        container.innerHTML = "";
         dashboardData.pet_profiles.forEach(cat => {
             container.innerHTML += `
                 <div class="card">
@@ -87,29 +92,79 @@
                     <h3>${cat.name} (${cat.age} yrs)</h3>
                     <p>Weight: <strong>${cat.latest_weight} kg</strong></p>
                     <p>Visits Today: ${cat.visits_today} | Avg: ${cat.avg_visits}</p>
-                    <p>Last Visit: ${new Date(cat.last_visit).toLocaleTimeString()}</p>
+                    <p>Last: ${cat.last_visit ? new Date(cat.last_visit).toLocaleTimeString() : 'N/A'}</p>
                 </div>`;
         });
-        updateCharts();
     }
 
     function updateCharts() {
-        // Scatter Plot Logic
+        const logs = dashboardData.logs;
         const ctxScatter = document.getElementById('scatterChart').getContext('2d');
-        new Chart(ctxScatter, {
+        const ctxWeight = document.getElementById('weightChart').getContext('2d');
+        const ctxVisit = document.getElementById('visitChart').getContext('2d');
+
+        // Destroy existing charts to prevent overlap
+        if(charts.scatter) charts.scatter.destroy();
+        if(charts.weight) charts.weight.destroy();
+        if(charts.visit) charts.visit.destroy();
+
+        // 1. SCATTER PLOT
+        // X = Hour (0-24), Y = Date (Last 14 days)
+        const scatterData = dashboardData.pet_profiles.map(p => ({
+            label: p.name,
+            data: logs.filter(l => l.pet_name === p.name).map(l => ({
+                x: new Date(l.timestamp).getHours() + (new Date(l.timestamp).getMinutes()/60),
+                y: new Date(l.timestamp).toLocaleDateString()
+            }))
+        }));
+
+        charts.scatter = new Chart(ctxScatter, {
             type: 'scatter',
-            data: { datasets: dashboardData.pet_profiles.map(p => ({
-                label: p.name,
-                data: dashboardData.logs.filter(l => l.pet_name === p.name).map(l => ({
-                    x: new Date(l.timestamp).getHours(), y: new Date(l.timestamp).toLocaleDateString()
-                }))
-            }))},
-            options: { scales: { y: { type: 'category' } } }
+            data: { datasets: scatterData },
+            options: { 
+                scales: { 
+                    x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 },
+                    y: { title: {display: true, text: 'Date'} }
+                }
+            }
         });
-        // ... Add logic for weight/visit chart filtering here
+
+        // 2. WEIGHT HISTORY (Filtered by dropdown)
+        const days = parseInt(document.getElementById('weightPeriod').value);
+        const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days);
+        
+        const weightDatasets = dashboardData.pet_profiles.map(p => ({
+            label: p.name,
+            data: logs.filter(l => l.pet_name === p.name && new Date(l.timestamp) > cutoff)
+                      .map(l => ({ x: l.timestamp, y: l.weight }))
+        }));
+
+        charts.weight = new Chart(ctxWeight, {
+            type: 'line',
+            data: { datasets: weightDatasets },
+            options: { scales: { x: { type: 'time', time: { unit: 'day' } } } }
+        });
+
+        // 3. VISIT HISTORY
+        const visitCounts = dashboardData.pet_profiles.map(p => ({
+            label: p.name,
+            data: Object.entries(logs.filter(l => l.pet_name === p.name && new Date(l.timestamp) > cutoff)
+                .reduce((acc, l) => {
+                    let d = new Date(l.timestamp).toLocaleDateString();
+                    acc[d] = (acc[d] || 0) + 1;
+                    return acc;
+                }, {})).map(([date, count]) => ({ x: date, y: count }))
+        }));
+
+        charts.visit = new Chart(ctxVisit, {
+            type: 'bar',
+            data: { datasets: visitCounts },
+            options: { scales: { x: { type: 'category' } } }
+        });
     }
 
     init();
 </script>
+
 </body>
 </html>
