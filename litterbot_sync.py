@@ -84,7 +84,10 @@ async def main():
 
     # Process Pet Profiles
     pet_profiles = []
-    today_date = datetime.now().date()
+    
+    # Use Dublin timezone so "Today" rolls over at midnight local time, not UTC
+    dublin_tz = zoneinfo.ZoneInfo("Europe/Dublin")
+    today_date = datetime.now(dublin_tz).date()
     yesterday_date = today_date - timedelta(days=1)
 
     for pet in account.pets:
@@ -120,6 +123,8 @@ async def main():
         for entry in final_history:
             try:
                 dt = datetime.fromisoformat(entry['timestamp'].replace('Z', '+00:00'))
+                entry_date = dt.date()
+                
                 if dt.date() == today_date:
                     visits_today += 1
                 elif entry_date == yesterday_date:
