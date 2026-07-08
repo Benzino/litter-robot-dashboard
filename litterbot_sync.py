@@ -50,7 +50,7 @@ async def main():
     # Process Robot Metadata
     robot = account.robots[0] if account.robots else None
     robot_metadata = {}
-        if robot:
+    if robot:
         print(f"--- DEBUG: Activity History ---")
         history = robot.get_activity_history()
         if history:
