@@ -17,7 +17,6 @@
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         .warning { color: #e53e3e; font-weight: bold; }
         
-        /* Radio button labels now inherit --text and use --radio-bg */
         .period-selector { display: flex; justify-content: center; gap: 5px; margin: 25px 0; flex-wrap: wrap; }
         .period-selector input { display: none; }
         .period-selector label { padding: 8px 16px; background: var(--radio-bg); color: var(--text); cursor: pointer; border-radius: 20px; font-weight: 600; }
@@ -87,6 +86,8 @@
 <script>
     let dashboardData = {};
     let charts = {};
+    // Palette: Vibrant, high-contrast colors
+    const catColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'];
 
     function toggleDarkMode() {
         const isDark = document.body.dataset.theme === 'dark';
@@ -122,19 +123,19 @@
 
         const container = document.getElementById('catCards');
         container.innerHTML = "";
-        dashboardData.pet_profiles.forEach(cat => {
+        dashboardData.pet_profiles.forEach((cat, i) => {
             const last30 = cat.history.filter(h => new Date(h.timestamp) > new Date(Date.now() - 30*86400000));
             const avg = last30.reduce((sum, curr) => sum + curr.weight, 0) / (last30.length || 1);
             const isAlert = (cat.latest_weight < (avg * 0.95));
 
             container.innerHTML += `
                 <div class="card" style="display: flex; gap: 15px; align-items: center;">
-                    <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 3px solid var(--radio-bg);">
+                    <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 4px solid ${catColors[i % catColors.length]};">
                     <div>
                         <h3 style="margin: 0;">${cat.name} ${isAlert ? '<span class="warning">⚠️</span>' : ''}</h3>
                         <p style="margin: 2px 0;">Weight: <strong>${cat.latest_weight} kg</strong></p>
                         <p style="margin: 2px 0; font-size: 0.85em;">Today: ${cat.visits_today} | Avg: ${cat.avg_visits}/d</p>
-                        <p style="margin: 2px 0; font-size: 0.85em; color: var(--text); opacity: 0.7;">Last: ${timeAgo(cat.last_visit)}</p>
+                        <p style="margin: 2px 0; font-size: 0.85em; opacity: 0.7;">Last: ${timeAgo(cat.last_visit)}</p>
                     </div>
                 </div>`;
         });
@@ -159,51 +160,66 @@
         const days = parseInt(document.querySelector('input[name="period"]:checked').value);
         const cutoff = new Date(Date.now() - days * 86400000);
         
-        // Dynamically set Chart colors based on theme
         const isDark = document.body.dataset.theme === 'dark';
-        Chart.defaults.color = isDark ? '#f7fafc' : '#333';
+        const textColor = isDark ? '#f7fafc' : '#333';
+        
+        Chart.defaults.color = textColor;
         Chart.defaults.borderColor = isDark ? '#4a5568' : '#e2e8f0';
 
         if(charts.scatter) charts.scatter.destroy();
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
+        const commonOptions = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: textColor } }
+            }
+        };
+
         // Scatter
         charts.scatter = new Chart(document.getElementById('scatterChart'), {
             type: 'scatter',
-            data: { datasets: dashboardData.pet_profiles.map(p => ({
+            data: { datasets: dashboardData.pet_profiles.map((p, i) => ({
                 label: p.name,
+                backgroundColor: catColors[i % catColors.length],
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({
                     x: new Date(l.timestamp).getHours() + (new Date(l.timestamp).getMinutes()/60),
                     y: new Date(l.timestamp).getTime()
                 }))
             }))},
-            options: { maintainAspectRatio: false, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
+            options: { ...commonOptions, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
             plugins: [nightShadePlugin]
         });
 
         // Weight
         charts.weight = new Chart(document.getElementById('weightChart'), {
             type: 'line',
-            data: { datasets: dashboardData.pet_profiles.map(p => ({
+            data: { datasets: dashboardData.pet_profiles.map((p, i) => ({
                 label: p.name,
+                borderColor: catColors[i % catColors.length],
+                backgroundColor: catColors[i % catColors.length],
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' } } } }
+            options: commonOptions
         });
 
         // Visits
         charts.visit = new Chart(document.getElementById('visitChart'), {
             type: 'bar',
-            data: { datasets: dashboardData.pet_profiles.map(p => {
+            data: { datasets: dashboardData.pet_profiles.map((p, i) => {
                 const counts = {};
                 p.history.filter(l => new Date(l.timestamp) > cutoff).forEach(l => {
                     const d = l.timestamp.split('T')[0];
                     counts[d] = (counts[d] || 0) + 1;
                 });
-                return { label: p.name, data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) };
+                return { 
+                    label: p.name, 
+                    backgroundColor: catColors[i % catColors.length],
+                    data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) 
+                };
             })},
-            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' } } } }
+            options: commonOptions
         });
     }
 
