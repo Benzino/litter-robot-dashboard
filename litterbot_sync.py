@@ -65,6 +65,11 @@ async def main():
         status_text = raw_status.name if hasattr(raw_status, 'name') else str(raw_status)
         clean_status = status_text.replace("_", " ").title()
 
+        # --- FIX: Timezone aware timestamp ---
+        dublin_tz = zoneinfo.ZoneInfo("Europe/Dublin")
+        now = datetime.now(dublin_tz)
+        formatted_time = now.strftime("%H:%M:%S %d/%m/%Y")
+        
         robot_metadata = {
             "name": str(robot.name),
             "is_online": robot.is_online,
@@ -73,7 +78,7 @@ async def main():
             "waste_level": getattr(robot, 'waste_drawer_level', 0),
             "cycle_count": robot.cycle_count,
             "last_seen": str(getattr(robot, 'last_seen', 'Unknown')),
-            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "generated_at": formatted_time
         }
 
     # Process Pet Profiles
