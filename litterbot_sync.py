@@ -2,7 +2,7 @@ import os
 import json
 import asyncio
 import zoneinfo # Requires Python 3.9+
-from datetime import datetime
+from datetime import datetime, timedelta
 from pylitterbot import Account
 
 # Ensure you have your environment variables set:
@@ -85,6 +85,7 @@ async def main():
     # Process Pet Profiles
     pet_profiles = []
     today_date = datetime.now().date()
+    yesterday_date = today_date - timedelta(days=1)
 
     for pet in account.pets:
         data = getattr(pet, "_data", {})
@@ -115,10 +116,14 @@ async def main():
 
         # Stats calculations
         visits_today = 0
+        visits_yesterday = 0
         for entry in final_history:
             try:
                 dt = datetime.fromisoformat(entry['timestamp'].replace('Z', '+00:00'))
-                if dt.date() == today_date: visits_today += 1
+                if dt.date() == today_date:
+                    visits_today += 1
+                elif entry_date == yesterday_date:
+                    visits_yesterday += 1
             except: pass
 
         avg_visits = 0
@@ -136,6 +141,7 @@ async def main():
             "profile_pic": str(data.get("s3ImageURL", "")),
             "last_visit": final_history[-1]['timestamp'] if final_history else None,
             "visits_today": visits_today,
+            "visits_yesterday": visits_yesterday,
             "avg_visits": avg_visits,
             "history": final_history
         })
