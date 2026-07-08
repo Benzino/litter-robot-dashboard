@@ -86,7 +86,6 @@
 <script>
     let dashboardData = {};
     let charts = {};
-    // Palette: Vibrant, high-contrast colors
     const catColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'];
 
     function toggleDarkMode() {
@@ -170,7 +169,8 @@
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
-        const commonOptions = {
+        // Standard configuration with NO interactive logic
+        const configOptions = {
             maintainAspectRatio: false,
             plugins: {
                 legend: { labels: { color: textColor } }
@@ -188,7 +188,7 @@
                     y: new Date(l.timestamp).getTime()
                 }))
             }))},
-            options: { ...commonOptions, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
+            options: { ...configOptions, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
             plugins: [nightShadePlugin]
         });
 
@@ -201,7 +201,7 @@
                 backgroundColor: catColors[i % catColors.length],
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: commonOptions
+            options: configOptions
         });
 
         // Visits
@@ -219,7 +219,7 @@
                     data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) 
                 };
             })},
-            options: commonOptions
+            options: configOptions
         });
     }
 
