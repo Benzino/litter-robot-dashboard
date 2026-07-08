@@ -7,18 +7,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <style>
-        :root { --primary: #4a90e2; --bg: #f8fafc; --card: #ffffff; --text: #333; }
-        [data-theme='dark'] { --primary: #63b3ed; --bg: #1a202c; --card: #2d3748; --text: #f7fafc; }
+        :root { --primary: #4a90e2; --bg: #f8fafc; --card: #ffffff; --text: #333; --radio-bg: #e2e8f0; }
+        [data-theme='dark'] { --primary: #63b3ed; --bg: #1a202c; --card: #2d3748; --text: #f7fafc; --radio-bg: #4a5568; }
+        
         body { font-family: 'Segoe UI', system-ui; background: var(--bg); color: var(--text); margin: 0; padding: 20px; transition: 0.3s; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .progress-bar { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; margin: 10px 0; }
         .progress-fill { height: 100%; background: var(--primary); transition: width 0.5s; }
         .warning { color: #e53e3e; font-weight: bold; }
+        
+        /* Radio button labels now inherit --text and use --radio-bg */
         .period-selector { display: flex; justify-content: center; gap: 5px; margin: 25px 0; flex-wrap: wrap; }
         .period-selector input { display: none; }
-        .period-selector label { padding: 8px 16px; background: #e2e8f0; cursor: pointer; border-radius: 20px; font-weight: 600; }
+        .period-selector label { padding: 8px 16px; background: var(--radio-bg); color: var(--text); cursor: pointer; border-radius: 20px; font-weight: 600; }
         .period-selector input:checked + label { background: var(--primary); color: white; }
+        
         .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
         .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
         .robot-image { max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
@@ -29,7 +33,7 @@
 <div class="container" style="max-width: 1100px; margin: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h1>🐈 Litter-Robot Dashboard</h1>
-        <button onclick="toggleDarkMode()" style="padding: 8px 12px; border-radius: 20px; border: none; cursor: pointer;">🌓</button>
+        <button onclick="toggleDarkMode()" style="padding: 8px 12px; border-radius: 20px; border: none; cursor: pointer; background: var(--radio-bg); color: var(--text);">🌓 Theme</button>
     </div>
 
     <div class="card" style="margin-bottom: 20px;">
@@ -125,12 +129,12 @@
 
             container.innerHTML += `
                 <div class="card" style="display: flex; gap: 15px; align-items: center;">
-                    <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 3px solid #e2e8f0;">
+                    <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 3px solid var(--radio-bg);">
                     <div>
                         <h3 style="margin: 0;">${cat.name} ${isAlert ? '<span class="warning">⚠️</span>' : ''}</h3>
                         <p style="margin: 2px 0;">Weight: <strong>${cat.latest_weight} kg</strong></p>
                         <p style="margin: 2px 0; font-size: 0.85em;">Today: ${cat.visits_today} | Avg: ${cat.avg_visits}/d</p>
-                        <p style="margin: 2px 0; font-size: 0.85em; color: #666;">Last: ${timeAgo(cat.last_visit)}</p>
+                        <p style="margin: 2px 0; font-size: 0.85em; color: var(--text); opacity: 0.7;">Last: ${timeAgo(cat.last_visit)}</p>
                     </div>
                 </div>`;
         });
@@ -142,7 +146,7 @@
             if (chart.config.type !== 'scatter') return;
             const { ctx, chartArea: { top, bottom }, scales: { x } } = chart;
             ctx.save();
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillStyle = document.body.dataset.theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)';
             const x0 = x.getPixelForValue(0), x6 = x.getPixelForValue(6);
             const x20 = x.getPixelForValue(20), x24 = x.getPixelForValue(24);
             if (x0 && x6) ctx.fillRect(x0, top, x6 - x0, bottom - top);
@@ -154,6 +158,11 @@
     function updateCharts() {
         const days = parseInt(document.querySelector('input[name="period"]:checked').value);
         const cutoff = new Date(Date.now() - days * 86400000);
+        
+        // Dynamically set Chart colors based on theme
+        const isDark = document.body.dataset.theme === 'dark';
+        Chart.defaults.color = isDark ? '#f7fafc' : '#333';
+        Chart.defaults.borderColor = isDark ? '#4a5568' : '#e2e8f0';
 
         if(charts.scatter) charts.scatter.destroy();
         if(charts.weight) charts.weight.destroy();
@@ -169,13 +178,7 @@
                     y: new Date(l.timestamp).getTime()
                 }))
             }))},
-            options: { 
-                maintainAspectRatio: false, 
-                scales: { 
-                    x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 },
-                    y: { type: 'time', time: { unit: 'day' } }
-                } 
-            },
+            options: { maintainAspectRatio: false, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
             plugins: [nightShadePlugin]
         });
 
