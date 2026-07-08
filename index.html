@@ -35,6 +35,7 @@
         <button onclick="toggleDarkMode()" style="padding: 8px 12px; border-radius: 20px; border: none; cursor: pointer; background: var(--radio-bg); color: var(--text);">🌓 Theme</button>
     </div>
 
+    <!-- Robot Card -->
     <div class="card" style="margin-bottom: 20px;">
         <div style="display: flex; flex-direction: column; gap: 20px;">
             <div style="display: flex; justify-content: center;">
@@ -169,11 +170,15 @@
         if(charts.weight) charts.weight.destroy();
         if(charts.visit) charts.visit.destroy();
 
-        // Standard configuration with NO interactive logic
-        const configOptions = {
+        // Standard configuration with Tooltips ON, but Legend Click OFF
+        const chartOptions = {
             maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: textColor } }
+                legend: { 
+                    labels: { color: textColor },
+                    onClick: () => null // Disables legend toggling
+                },
+                tooltip: { enabled: true } // Keeps tooltips
             }
         };
 
@@ -188,7 +193,13 @@
                     y: new Date(l.timestamp).getTime()
                 }))
             }))},
-            options: { ...configOptions, scales: { x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, y: { type: 'time', time: { unit: 'day' } } } },
+            options: { 
+                ...chartOptions, 
+                scales: { 
+                    x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 }, 
+                    y: { type: 'time', time: { unit: 'day' } } 
+                } 
+            },
             plugins: [nightShadePlugin]
         });
 
@@ -201,7 +212,10 @@
                 backgroundColor: catColors[i % catColors.length],
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: configOptions
+            options: {
+                ...chartOptions,
+                scales: { x: { type: 'time', time: { unit: 'day' } } }
+            }
         });
 
         // Visits
@@ -219,7 +233,10 @@
                     data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) 
                 };
             })},
-            options: configOptions
+            options: {
+                ...chartOptions,
+                scales: { x: { type: 'time', time: { unit: 'day' } } }
+            }
         });
     }
 
