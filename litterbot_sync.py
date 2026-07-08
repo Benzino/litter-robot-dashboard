@@ -72,7 +72,8 @@ async def main():
             "litter_level": robot.litter_level,
             "waste_level": getattr(robot, 'waste_drawer_level', 0),
             "cycle_count": robot.cycle_count,
-            "last_seen": str(getattr(robot, 'last_seen', 'Unknown'))
+            "last_seen": str(getattr(robot, 'last_seen', 'Unknown')),
+            "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
 
     # Process Pet Profiles
