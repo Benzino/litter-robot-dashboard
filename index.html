@@ -30,12 +30,14 @@
 <body>
 
 <div class="container" style="max-width: 1100px; margin: auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>🐈 Litter-Robot Dashboard</h1>
-        <div style="font-size: 0.8em; opacity: 0.7;">Updated: <span id="lastUpdated">N/A</span></div>
-        <button onclick="toggleDarkMode()" ... >🌓 Theme</button>
-    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+    <h1>🐈 Litter-Robot Dashboard</h1>
+    <button onclick="toggleDarkMode()" style="padding: 8px 12px; border-radius: 20px; border: none; cursor: pointer; background: var(--radio-bg); color: var(--text);">🌓 Theme</button>
+</div>
 
+<div style="text-align: center; font-size: 0.85em; opacity: 0.6; margin-bottom: 20px;">
+    Last Update: <span id="lastUpdated">N/A</span>
+</div>
 
     <!-- Robot Card -->
     <div class="card" style="margin-bottom: 20px;">
