@@ -51,6 +51,16 @@ async def main():
     robot = account.robots[0] if account.robots else None
     robot_metadata = {}
     if robot:
+        # --- DEBUG CODE START ---
+        print(f"--- DEBUG: Available Robot Attributes ---")
+        # Print all attributes found on the robot object
+        print([attr for attr in dir(robot) if not attr.startswith('_')])
+        # Print the specific values
+        print(f"Last Seen: {getattr(robot, 'last_seen', 'N/A')}")
+        print(f"Last Cleaned Date: {getattr(robot, 'last_cleaned_date', 'N/A')}")
+        print(f"Last Cycle: {getattr(robot, 'last_cycle_completed', 'N/A')}")
+        # --- DEBUG CODE END ---
+        
         raw_status = getattr(robot, 'status', 'Unknown')
         status_text = raw_status.name if hasattr(raw_status, 'name') else str(raw_status)
         clean_status = status_text.replace("_", " ").title()
