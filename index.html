@@ -32,8 +32,10 @@
 <div class="container" style="max-width: 1100px; margin: auto;">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h1>🐈 Litter-Robot Dashboard</h1>
-        <button onclick="toggleDarkMode()" style="padding: 8px 12px; border-radius: 20px; border: none; cursor: pointer; background: var(--radio-bg); color: var(--text);">🌓 Theme</button>
+        <div style="font-size: 0.8em; opacity: 0.7;">Updated: <span id="lastUpdated">N/A</span></div>
+        <button onclick="toggleDarkMode()" ... >🌓 Theme</button>
     </div>
+
 
     <!-- Robot Card -->
     <div class="card" style="margin-bottom: 20px;">
@@ -118,6 +120,7 @@
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Online" : "Offline";
         document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
         document.getElementById('lastSeen').textContent = timeAgo(dashboardData.robot_metadata.last_seen);
+        document.getElementById('lastUpdated').textContent = dashboardData.robot_metadata.generated_at;
         document.getElementById('litterBar').style.width = dashboardData.robot_metadata.litter_level + "%";
         document.getElementById('wasteBar').style.width = dashboardData.robot_metadata.waste_level + "%";
 
