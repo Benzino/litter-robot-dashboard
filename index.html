@@ -21,7 +21,6 @@
         .period-selector input:checked + label { background: var(--primary); color: white; }
         .chart-wrapper-large { position: relative; height: 450px; width: 100%; }
         .chart-wrapper-standard { position: relative; height: 300px; width: 100%; }
-        .info-box { margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 8px; font-size: 0.9em; text-align: center; }
         .robot-image { max-height: 160px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
     </style>
 </head>
@@ -73,12 +72,10 @@
         <div class="card">
             <h3>Weight History (kg)</h3>
             <div class="chart-wrapper-standard"><canvas id="weightChart"></canvas></div>
-            <div id="weightInfo" class="info-box">Click a data point for details</div>
         </div>
         <div class="card">
             <h3>Visits History</h3>
             <div class="chart-wrapper-standard"><canvas id="visitChart"></canvas></div>
-            <div id="visitInfo" class="info-box">Click a bar for details</div>
         </div>
     </div>
 </div>
@@ -112,7 +109,6 @@
     }
 
     function renderStats() {
-        // Robot
         document.getElementById('opStatus').textContent = dashboardData.robot_metadata.status;
         document.getElementById('netStatus').textContent = dashboardData.robot_metadata.is_online ? "Online" : "Offline";
         document.getElementById('scoopCount').textContent = dashboardData.robot_metadata.cycle_count;
@@ -120,7 +116,6 @@
         document.getElementById('litterBar').style.width = dashboardData.robot_metadata.litter_level + "%";
         document.getElementById('wasteBar').style.width = dashboardData.robot_metadata.waste_level + "%";
 
-        // Cats
         const container = document.getElementById('catCards');
         container.innerHTML = "";
         dashboardData.pet_profiles.forEach(cat => {
@@ -159,18 +154,6 @@
     function updateCharts() {
         const days = parseInt(document.querySelector('input[name="period"]:checked').value);
         const cutoff = new Date(Date.now() - days * 86400000);
-        
-        const chartOptions = (targetId) => ({
-            maintainAspectRatio: false,
-            onClick: (e, elements) => {
-                if (elements.length > 0) {
-                    const el = elements[0];
-                    const dataset = e.chart.data.datasets[el.datasetIndex];
-                    const data = dataset.data[el.index];
-                    document.getElementById(targetId).textContent = `Date: ${new Date(data.x).toLocaleDateString()} | Value: ${data.y}`;
-                }
-            }
-        });
 
         if(charts.scatter) charts.scatter.destroy();
         if(charts.weight) charts.weight.destroy();
@@ -186,7 +169,13 @@
                     y: new Date(l.timestamp).getTime()
                 }))
             }))},
-            options: { maintainAspectRatio: false, scales: { x: { min: 0, max: 24 }, y: { type: 'time' } } },
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { 
+                    x: { title: {display: true, text: 'Hour of Day'}, min: 0, max: 24 },
+                    y: { type: 'time', time: { unit: 'day' } }
+                } 
+            },
             plugins: [nightShadePlugin]
         });
 
@@ -197,7 +186,7 @@
                 label: p.name,
                 data: p.history.filter(l => new Date(l.timestamp) > cutoff).map(l => ({ x: l.timestamp, y: l.weight }))
             }))},
-            options: chartOptions('weightInfo')
+            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' } } } }
         });
 
         // Visits
@@ -211,7 +200,7 @@
                 });
                 return { label: p.name, data: Object.keys(counts).map(d => ({ x: new Date(d).getTime(), y: counts[d] })) };
             })},
-            options: chartOptions('visitInfo')
+            options: { maintainAspectRatio: false, scales: { x: { type: 'time', time: { unit: 'day' } } } }
         });
     }
 
