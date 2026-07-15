@@ -138,9 +138,9 @@
                     <img src="${cat.profile_pic}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 4px solid ${catColors[i % catColors.length]};">
                     <div>
                         <h3 style="margin: 0;">${cat.name} ${isAlert ? '<span class="warning">⚠️</span>' : ''}</h3>
-                        <p style="margin: 2px 0;">Weight: <strong>${cat.latest_weight} kg</strong></p>
-                        <p style="margin: 2px 0; font-size: 0.85em;">Visits Today: ${cat.visits_today} | Yday: ${cat.visits_yesterday} | Avg: ${cat.avg_visits}/d</p>
-                        <p style="margin: 2px 0; font-size: 0.85em; opacity: 0.7;">Last Visit: ${timeAgo(cat.last_visit)}</p>
+                        <p style="margin: 2px 0;">Age: <strong>${cat.age}</strong> | Weight: <strong>${cat.latest_weight} kg</strong></p>
+                        <p style="margin: 2px 0; font-size: 0.85em;">Today: ${cat.visits_today} | Yday: ${cat.visits_yesterday} | Avg: ${cat.avg_visits}/d</p>
+                        <p style="margin: 2px 0; font-size: 0.85em; opacity: 0.7;">Last: ${timeAgo(cat.last_visit)}</p>
                     </div>
                 </div>`;
         });
