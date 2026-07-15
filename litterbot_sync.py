@@ -52,11 +52,23 @@ async def main():
     robot = account.robots[0] if account.robots else None
     robot_metadata = {}
     if robot:
+        # 1. Force a refresh to ensure we have the latest API state
+        await robot.refresh()
+
+        # 2. Grab the actual latest event from the activity log instead of the network ping
+        last_activity_ts = getattr(robot, 'last_seen', 'Unknown')
+        try:
+            history = await robot.get_activity_history(limit=5)
+            if history:
+                # Sort to guarantee we have the absolute newest event
+                history.sort(key=lambda x: x.timestamp, reverse=True)
+                last_activity_ts = history[0].timestamp
+        except Exception as e:
+            print(f"Warning: Could not fetch robot history: {e}")
+
         # --- DEBUG CODE START ---
         print(f"--- DEBUG: Available Robot Attributes ---")
-        # Print all attributes found on the robot object
         print([attr for attr in dir(robot) if not attr.startswith('_')])
-        # Print the specific values
         print(f"Last Seen: {getattr(robot, 'last_seen', 'N/A')}")
         print(f"Last Cleaned Date: {getattr(robot, 'last_cleaned_date', 'N/A')}")
         print(f"Last Cycle: {getattr(robot, 'last_cycle_completed', 'N/A')}")
@@ -78,7 +90,7 @@ async def main():
             "litter_level": robot.litter_level,
             "waste_level": getattr(robot, 'waste_drawer_level', 0),
             "cycle_count": robot.cycle_count,
-            "last_seen": str(getattr(robot, 'last_seen', 'Unknown')),
+            "last_seen": str(last_activity_ts), # <--- THIS IS THE FIX
             "generated_at": formatted_time
         }
 
