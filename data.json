@@ -4,17 +4,17 @@
     "is_online": true,
     "status": "Ready",
     "litter_level": 90.0,
-    "waste_level": 46,
-    "cycle_count": 2255,
-    "last_seen": "2026-07-29 05:10:53+00:00",
-    "generated_at": "11:25:50 29/07/2026"
+    "waste_level": 47,
+    "cycle_count": 2256,
+    "last_seen": "2026-07-29 12:39:35+00:00",
+    "generated_at": "13:53:30 29/07/2026"
   },
   "pet_profiles": [
     {
       "name": "Shiv",
       "age": 3,
       "latest_weight": 7.0,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDIMDEVYAT&Signature=XfTFG1j91uR5KnGOs6oViYmYQVI%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQD5tpoyBMo59v%2BibBCi629QDo%2BWMTYQDhDhqNmy5MnTiQIgOTlpf0PygqfbBwPOuZN7YWT2hAwSc9wrderbuv8ieS4qrgQIexAEGgwzNDQ3NDU0MDkwOTQiDKL8uKW55WY3UB8u9iqLBNZ23h2n5CFK%2FY1hOLgQS3ng5cp6F3B2sy%2Fl2C%2BLK6Cb8AEkxbUF%2BJo3R7QxYB1yMTVqqwDtyi5k0Tc8f9Cp9wKN%2F%2FApbetP6rUZK%2BpzDGsUmVdOssFpsq9tM2zgNnSB26i5cv9DKtZi%2FAuKlDrUmPMZgifTM5C%2Bc85LtgJ78HWQ40MNzL75uvp09nSb4TBzPZaLiPB2GxcohqjmrAUKtLzrmNetKOm0G7gcLS3%2F1CtEH7ILAcGaYBfp36%2B03LRN07KVR5aCiPMMJuBo3sMy0kXD5OR4jQbhiQUJAkt4PsMjPcgKRrMlgOPZyu%2FEKuDLHb6GYuOz8ejuP3jphqsmZg7V0OFncphla709qoKuv6HsrC09J3npD%2FG23ShSa%2ByL9mUQCE2vjJa56BdbkOQqWA5Eo1NxrlHPMFBfBU6rZqVrOy8SJQYVzxzSw%2BxyxM53OXk0so2FyLDHwlk7rz%2FfFOE2mAy6H0AHx7A6cP9%2FIljNdubr5ZZpdOZf3%2FPWCNinZ3urxNk2VF0f8srGOeM6NYKBeno8bJx4YZyWDP6os4olu%2BcmigtpzR1WHlvyzem%2F6whp03cie1EIO0JeOaBFwwYttYyA1HPdjLvhiAaKTKHqm2E3NfJnvucf4ZlLU4fM%2BH6T%2Fk19ArA7aZilM8SvdqSRrwaz1eIHgevBIuH8j%2B9T5GWzWIFzW3wlxOswsI2n0wY6ogF6%2FRbg4OFq4NUBUHZ6%2FDsOhxmXj18pVW%2F7OjXPiUzr%2BYr6vSgYShngkUOdD%2FmM7lFERp1y1OlWJplY71dVr%2FqxbMAWE7Yu4PTHMYfixLVjYQtplA9XyZr1BDAyI0auaIevxy4%2Fge3hnrCFsT05MR%2BfDgtO2e%2FT3KWaqUTixSYIZpY1Cx2QRd5JPnbvLF1HIQ%2FZoDYQJqGpDfAOdYzrU%2BCiRro%3D&Expires=1785324349",
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDEOHKGPAF&Signature=TXoyOWodDY5vZrJ5BR5b9fgKZZg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCICjyimVLJxIdQP4Tg3hdAWs1MO8bw9alGkcXvdbCQn0JAiAmjN3hGpedvUz938WUbFT80u7jlrhmWkcwvxS1T8TzWSquBAh%2BEAQaDDM0NDc0NTQwOTA5NCIMb%2BqPyjgD2JirJNvvKosEcY9%2Fhs19188nZ7LvpTrmCpQ9d8iv0kqQB7j2EvTpOPH9PyYbsfo2YYccxjEHn1J1CrnLoIGoa4qaQBHHmlJHDrZvq27OOGUUO9TfQEIAPHnmMEF2lpSSapBV3t0zFEZmTrYehZCUCF1DrjX4JMRYw1esMg2%2F05lcDiUrKSxLunMT%2B4AFDpKIXU95w8aOynEooG0U43RiGokA%2FLfeDoZXFkE6LZepEyOUHlr0VVmXNMixtVPm77ZXFgneDp7gt9ENVyUOhozrXAFf%2FW9zMzbm3VBwgBISY31qotHu7Rk%2B8BOW9HwjaS1qR3K9QQx0btqYpqNUjmtvQyRfXFlSJGPk%2FULlYi9cxFgpUmhGE3U%2FPuuxT5VjWlxBZfbdhJCLJ9s%2FFnP5n1SFMDa6Ho43JD3BTWRr9VhlHmhPcLybaCU4LqcR1JV7hI0AnscX9qoecago68zTPtLd9UtmPN1YS01rzWbAbBi7yW3WzxJyAYcmupq2fDXcodG%2FszR6YKkQWEAxXm0OfXvTkh4%2FTMcmqfJioCrdnDMaNoCldTstShVCj0cKdcAg0K3F5XCrFgPqqWHe1bOG9VN1VYC4%2F%2FCs4O66mDL1C3sUXSk5Wy4FKzNB%2FB4dO7qKOTcje%2BVHfteMR9njL9H5yIBMsPqfBeCClmZfelc48qySESzB8vFY4N7KhqqPQ1n6VYiVgNuATTCh7KfTBjqjAYj1zayl4sTiUMvLHXGM6B02L8obosvvmrdHTNhjPVIRYvJ26tMJcCvg9B4thB7p0oE09Olx1HbXQD7crqVOW%2FBHkOkV40b%2BamHDI1VLhiKke2zutVPNSeTVKJ9TeMyJjav4nRW6qmcyIkE6%2BuXBwrPzuxpjMJ9XD%2FELtNQ89zdz7Cd27vXkqTyCf0c5Y9qP5%2FFqLBRydVrxMJR98pRgza9jD0c%3D&Expires=1785333210",
       "last_visit": "2026-07-29T04:43:35",
       "visits_today": 2,
       "visits_yesterday": 2,
@@ -373,12 +373,12 @@
     {
       "name": "Baby",
       "age": 3,
-      "latest_weight": 3.47,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDIMDEVYAT&Signature=RKGggwTUDMaXqs3zSINS6E7QqIg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQD5tpoyBMo59v%2BibBCi629QDo%2BWMTYQDhDhqNmy5MnTiQIgOTlpf0PygqfbBwPOuZN7YWT2hAwSc9wrderbuv8ieS4qrgQIexAEGgwzNDQ3NDU0MDkwOTQiDKL8uKW55WY3UB8u9iqLBNZ23h2n5CFK%2FY1hOLgQS3ng5cp6F3B2sy%2Fl2C%2BLK6Cb8AEkxbUF%2BJo3R7QxYB1yMTVqqwDtyi5k0Tc8f9Cp9wKN%2F%2FApbetP6rUZK%2BpzDGsUmVdOssFpsq9tM2zgNnSB26i5cv9DKtZi%2FAuKlDrUmPMZgifTM5C%2Bc85LtgJ78HWQ40MNzL75uvp09nSb4TBzPZaLiPB2GxcohqjmrAUKtLzrmNetKOm0G7gcLS3%2F1CtEH7ILAcGaYBfp36%2B03LRN07KVR5aCiPMMJuBo3sMy0kXD5OR4jQbhiQUJAkt4PsMjPcgKRrMlgOPZyu%2FEKuDLHb6GYuOz8ejuP3jphqsmZg7V0OFncphla709qoKuv6HsrC09J3npD%2FG23ShSa%2ByL9mUQCE2vjJa56BdbkOQqWA5Eo1NxrlHPMFBfBU6rZqVrOy8SJQYVzxzSw%2BxyxM53OXk0so2FyLDHwlk7rz%2FfFOE2mAy6H0AHx7A6cP9%2FIljNdubr5ZZpdOZf3%2FPWCNinZ3urxNk2VF0f8srGOeM6NYKBeno8bJx4YZyWDP6os4olu%2BcmigtpzR1WHlvyzem%2F6whp03cie1EIO0JeOaBFwwYttYyA1HPdjLvhiAaKTKHqm2E3NfJnvucf4ZlLU4fM%2BH6T%2Fk19ArA7aZilM8SvdqSRrwaz1eIHgevBIuH8j%2B9T5GWzWIFzW3wlxOswsI2n0wY6ogF6%2FRbg4OFq4NUBUHZ6%2FDsOhxmXj18pVW%2F7OjXPiUzr%2BYr6vSgYShngkUOdD%2FmM7lFERp1y1OlWJplY71dVr%2FqxbMAWE7Yu4PTHMYfixLVjYQtplA9XyZr1BDAyI0auaIevxy4%2Fge3hnrCFsT05MR%2BfDgtO2e%2FT3KWaqUTixSYIZpY1Cx2QRd5JPnbvLF1HIQ%2FZoDYQJqGpDfAOdYzrU%2BCiRro%3D&Expires=1785324349",
-      "last_visit": "2026-07-29T00:56:17",
-      "visits_today": 1,
+      "latest_weight": 3.07,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDEOHKGPAF&Signature=0y2d4frk0P%2B2BkbqCPFeiQBJ1e4%3D&x-amz-security-token=IQoJb3JpZ2luX2VjELX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCICjyimVLJxIdQP4Tg3hdAWs1MO8bw9alGkcXvdbCQn0JAiAmjN3hGpedvUz938WUbFT80u7jlrhmWkcwvxS1T8TzWSquBAh%2BEAQaDDM0NDc0NTQwOTA5NCIMb%2BqPyjgD2JirJNvvKosEcY9%2Fhs19188nZ7LvpTrmCpQ9d8iv0kqQB7j2EvTpOPH9PyYbsfo2YYccxjEHn1J1CrnLoIGoa4qaQBHHmlJHDrZvq27OOGUUO9TfQEIAPHnmMEF2lpSSapBV3t0zFEZmTrYehZCUCF1DrjX4JMRYw1esMg2%2F05lcDiUrKSxLunMT%2B4AFDpKIXU95w8aOynEooG0U43RiGokA%2FLfeDoZXFkE6LZepEyOUHlr0VVmXNMixtVPm77ZXFgneDp7gt9ENVyUOhozrXAFf%2FW9zMzbm3VBwgBISY31qotHu7Rk%2B8BOW9HwjaS1qR3K9QQx0btqYpqNUjmtvQyRfXFlSJGPk%2FULlYi9cxFgpUmhGE3U%2FPuuxT5VjWlxBZfbdhJCLJ9s%2FFnP5n1SFMDa6Ho43JD3BTWRr9VhlHmhPcLybaCU4LqcR1JV7hI0AnscX9qoecago68zTPtLd9UtmPN1YS01rzWbAbBi7yW3WzxJyAYcmupq2fDXcodG%2FszR6YKkQWEAxXm0OfXvTkh4%2FTMcmqfJioCrdnDMaNoCldTstShVCj0cKdcAg0K3F5XCrFgPqqWHe1bOG9VN1VYC4%2F%2FCs4O66mDL1C3sUXSk5Wy4FKzNB%2FB4dO7qKOTcje%2BVHfteMR9njL9H5yIBMsPqfBeCClmZfelc48qySESzB8vFY4N7KhqqPQ1n6VYiVgNuATTCh7KfTBjqjAYj1zayl4sTiUMvLHXGM6B02L8obosvvmrdHTNhjPVIRYvJ26tMJcCvg9B4thB7p0oE09Olx1HbXQD7crqVOW%2FBHkOkV40b%2BamHDI1VLhiKke2zutVPNSeTVKJ9TeMyJjav4nRW6qmcyIkE6%2BuXBwrPzuxpjMJ9XD%2FELtNQ89zdz7Cd27vXkqTyCf0c5Y9qP5%2FFqLBRydVrxMJR98pRgza9jD0c%3D&Expires=1785333210",
+      "last_visit": "2026-07-29T12:12:27",
+      "visits_today": 2,
       "visits_yesterday": 2,
-      "avg_visits": 3.1,
+      "avg_visits": 3.2,
       "history": [
         {
           "timestamp": "2026-07-01T01:22:06",
@@ -731,6 +731,10 @@
         {
           "timestamp": "2026-07-29T00:56:17",
           "weight": 3.47
+        },
+        {
+          "timestamp": "2026-07-29T12:12:27",
+          "weight": 3.07
         }
       ]
     }
