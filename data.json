@@ -4,19 +4,19 @@
     "is_online": true,
     "status": "Ready",
     "litter_level": 90.0,
-    "waste_level": 1,
-    "cycle_count": 2753,
-    "last_seen": "2026-10-28 02:09:34+00:00",
-    "generated_at": "07:37:46 28/10/2026"
+    "waste_level": 7,
+    "cycle_count": 2755,
+    "last_seen": "2026-10-28 11:22:32+00:00",
+    "generated_at": "14:36:11 28/10/2026"
   },
   "pet_profiles": [
     {
       "name": "Shiv",
       "age": 3,
-      "latest_weight": 6.8,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDK7FUNENN&Signature=GYmVD2z0a5c2xKMGdfx8IKWciek%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEDcaCXVzLWVhc3QtMSJIMEYCIQDpghfQTPrEefhzA33mKnjRjBM%2BJkXVHAgOoz%2BiXc8sgQIhAOiasqUYHdDqLnKs1u1CARz82pE%2FfsfLsIB2E7nVcze%2BKrcECP7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBBoMMzQ0NzQ1NDA5MDk0IgwsaLWaJI5M4Nt8xzYqiwRhUgLqdkS52028X%2FwQVE3qsyqfpBZVq%2BZeMeQkMCdqq%2FWe5YiN1XqqHe%2FqZaRTJGOYC8izH0BGpgf99JmorsOAe7nMkzsbF6biOrs%2BdtzCQfwfmIYMbvIsmQb1%2Bsos1PMoGvT3psin9OkHkGx%2BKtpxvKawjN0KzE9DRM%2F3IjesDQMGlGC5kvY5IGsWTFkK0m0OLbgSr6JPDzq1GYM7vNopmDZoPeEPY0VZpqbtbHwG5k7VQnA2XnkfafKI%2BQalfdd2v9YLLeCv%2FmuHCN%2FobT6yMEAV3aybgCR%2FbgZcEJwsUXNcK%2F8kEPiHMN6LnGU9tg2CkrULif1DnP%2BZ8A4MFVascyVITd5k01PDTEebV6a0rvBg2MuEhflrdjoELh7bg9wDs06M45zEF3YZFztIOpCZpa4l9Lk3ojipSXybWzG9HbxwssxRtS9GFqX9vXVbLrVdlVTTXSIWaGJdAmtPBkV4GclWZ5enoPSbIv4CB7oftPWZVBon%2Bp%2B7LntB%2FcROAEMpoc2eHLsgk9Pz78Rm5KgC%2BH43PTW%2FGpUsSOxJqtRBG0nzhXdPbGLT0JfMwqHdYNfGFZeFuVls4gO30qO05Zbh1Ct1oQQkOJS7ygTbjEd62W0PxTu3CfD5AVDMPHs8QBxc83EpugrjcWcU%2FDhC4SwKDafxwQgHkbmePPKHUMKGiSBEq8Y%2BSJ8tJUB7MJ%2BkhtcGOqEBYr7%2FXknW2BQAkXqd5YavF9B7otK5Sa5z2P%2FqmQX%2FOlINtPXa1ihuziLZ3eqPFdD98lenVnraPaLZCoSkxYkf9Uj6wbdT6xmk1trChyHoERbV3iXJ67vZh1O51vH6lVpamsFw7TElHDH1RghNsvBtm5PrSV1vcvgyY2%2BcYtj5wkm%2BWWkJIKGVvf8lR9K5GD%2B95kmZ2gPPKYM98YzAYQpBsGc%3D&Expires=1793176665",
-      "last_visit": "2026-10-28T00:00:51",
-      "visits_today": 1,
+      "latest_weight": 7.18,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-4c4c04fb-86df-46c6-990a-42401ad0df26/1756548592?AWSAccessKeyId=ASIAVARDNPJDLXYMAHNP&Signature=4jv7okQ5iVyvIsIQnwZ7FrLMwsA%3D&x-amz-security-token=IQoJb3JpZ2luX2VjED0aCXVzLWVhc3QtMSJHMEUCIBKhlfJNkE9h%2Bj5Pj3VGIwC2dKMAZIo1442WscurXZndAiEA3ZtEdPOlqkbbziCMGtFC0nUf4FbakH%2BRMq0ydx%2BzrUgqrgQIBRAEGgwzNDQ3NDU0MDkwOTQiDC6jZSzBsp1ckl5OqyqLBKoHABRMGiKGTJSpQJE7C1pAdc0%2BsOHb0LdYm9WVIH7EcxlLJP8Shb0TagX3fbnu9rfzSwRZLun9xA5M85V%2FHvF4x%2F5nMukrHq701qGPMf%2B6SEfshPFiqNiTdZp%2Bs%2BYp%2FHGthar3v12xQUN6aQVOPRVQWuDy1f0G3yYgX2Dta5CdZNVTWoYRmWLmfSX%2FhjrGbi%2Bkq4vftHS6YU56sqYJaPqTctvpNwyiEG2QER%2B6DLEKvgjAtcCemmcUK1NFWwyHsIkCDEcMtf8tLbMnq4mB58iEh%2BUTPfI7iPkqiV1M6MwXyw2kLzL4uBBkdA93PT5zoVddDPzCwXVNKPyWa1SCKBK5m9CSooYtGzlvk4ONUQTJGp3tPOq9VuK5B31ijwdaenaaRoI4%2BGIXQRqP0gUAc0RyJW4jXDrABnpRfjGb50gJ7q0%2FbZB%2BjeI0nOS7C87v0twbHo43XXXrNsN7xlob3kx2EfEKtXFFnpDGhdMcrsUFD4LJHkCKQjtt8r%2Fu4dLwGuaJOAGw7qdVV02dTDdTvOO%2BC0VU1KDoUwa%2BfahasHj1WZomV6caXSZ9JWTH4o%2BlOBejnWJE%2Fj79emrhGtdilNqSg%2FsxU5SNF258vdHV1cJC3CKj7MApe3yxYWHgLhMxbw0RIAyGI4PpVVw4VqRmus1KY512%2FpqshRQjICCsfEKLHAEnQviL4jhx8Igw%2Bs%2BH1wY6ogFkJc55fD%2BbclfysMkeNlozJiZSFnY7AX%2BVH64dEqDEqqZwZrEhNU3xzNi2iyQvg2WnFCAZg1lS3oYKy2FmdzM74iUSCLtckAEJ0jxE9q5r5aUQFqKB2VFq28ZNABMzBhhJiNFy7UOGonaiy1L%2FLmwRgFbTL%2BMAfSahfvozlRvrKQM6Wk73Yhs0SCauiW3JZ9cvgrGfSGR8xke97L713Ci65kc%3D&Expires=1793201770",
+      "last_visit": "2026-10-28T09:55:02",
+      "visits_today": 3,
       "visits_yesterday": 3,
       "avg_visits": 3.1,
       "history": [
@@ -1483,16 +1483,24 @@
         {
           "timestamp": "2026-10-28T00:00:51",
           "weight": 6.8
+        },
+        {
+          "timestamp": "2026-10-28T09:46:23",
+          "weight": 6.93
+        },
+        {
+          "timestamp": "2026-10-28T09:55:02",
+          "weight": 7.18
         }
       ]
     },
     {
       "name": "Baby",
       "age": 3,
-      "latest_weight": 3.35,
-      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDK7FUNENN&Signature=xVdW8al5N7XALWqtsRq3wUUOQbQ%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEDcaCXVzLWVhc3QtMSJIMEYCIQDpghfQTPrEefhzA33mKnjRjBM%2BJkXVHAgOoz%2BiXc8sgQIhAOiasqUYHdDqLnKs1u1CARz82pE%2FfsfLsIB2E7nVcze%2BKrcECP7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBBoMMzQ0NzQ1NDA5MDk0IgwsaLWaJI5M4Nt8xzYqiwRhUgLqdkS52028X%2FwQVE3qsyqfpBZVq%2BZeMeQkMCdqq%2FWe5YiN1XqqHe%2FqZaRTJGOYC8izH0BGpgf99JmorsOAe7nMkzsbF6biOrs%2BdtzCQfwfmIYMbvIsmQb1%2Bsos1PMoGvT3psin9OkHkGx%2BKtpxvKawjN0KzE9DRM%2F3IjesDQMGlGC5kvY5IGsWTFkK0m0OLbgSr6JPDzq1GYM7vNopmDZoPeEPY0VZpqbtbHwG5k7VQnA2XnkfafKI%2BQalfdd2v9YLLeCv%2FmuHCN%2FobT6yMEAV3aybgCR%2FbgZcEJwsUXNcK%2F8kEPiHMN6LnGU9tg2CkrULif1DnP%2BZ8A4MFVascyVITd5k01PDTEebV6a0rvBg2MuEhflrdjoELh7bg9wDs06M45zEF3YZFztIOpCZpa4l9Lk3ojipSXybWzG9HbxwssxRtS9GFqX9vXVbLrVdlVTTXSIWaGJdAmtPBkV4GclWZ5enoPSbIv4CB7oftPWZVBon%2Bp%2B7LntB%2FcROAEMpoc2eHLsgk9Pz78Rm5KgC%2BH43PTW%2FGpUsSOxJqtRBG0nzhXdPbGLT0JfMwqHdYNfGFZeFuVls4gO30qO05Zbh1Ct1oQQkOJS7ygTbjEd62W0PxTu3CfD5AVDMPHs8QBxc83EpugrjcWcU%2FDhC4SwKDafxwQgHkbmePPKHUMKGiSBEq8Y%2BSJ8tJUB7MJ%2BkhtcGOqEBYr7%2FXknW2BQAkXqd5YavF9B7otK5Sa5z2P%2FqmQX%2FOlINtPXa1ihuziLZ3eqPFdD98lenVnraPaLZCoSkxYkf9Uj6wbdT6xmk1trChyHoERbV3iXJ67vZh1O51vH6lVpamsFw7TElHDH1RghNsvBtm5PrSV1vcvgyY2%2BcYtj5wkm%2BWWkJIKGVvf8lR9K5GD%2B95kmZ2gPPKYM98YzAYQpBsGc%3D&Expires=1793176665",
-      "last_visit": "2026-10-28T01:27:09",
-      "visits_today": 1,
+      "latest_weight": 3.34,
+      "profile_pic": "https://whisker-prod-pet-profile-images.s3.amazonaws.com/2176176/PET-79c4db6a-ca44-4d10-9477-932641cb6150/1733866155?AWSAccessKeyId=ASIAVARDNPJDLXYMAHNP&Signature=XprsLWAjVafOnPbEzZFv6OJ4N4Q%3D&x-amz-security-token=IQoJb3JpZ2luX2VjED0aCXVzLWVhc3QtMSJHMEUCIBKhlfJNkE9h%2Bj5Pj3VGIwC2dKMAZIo1442WscurXZndAiEA3ZtEdPOlqkbbziCMGtFC0nUf4FbakH%2BRMq0ydx%2BzrUgqrgQIBRAEGgwzNDQ3NDU0MDkwOTQiDC6jZSzBsp1ckl5OqyqLBKoHABRMGiKGTJSpQJE7C1pAdc0%2BsOHb0LdYm9WVIH7EcxlLJP8Shb0TagX3fbnu9rfzSwRZLun9xA5M85V%2FHvF4x%2F5nMukrHq701qGPMf%2B6SEfshPFiqNiTdZp%2Bs%2BYp%2FHGthar3v12xQUN6aQVOPRVQWuDy1f0G3yYgX2Dta5CdZNVTWoYRmWLmfSX%2FhjrGbi%2Bkq4vftHS6YU56sqYJaPqTctvpNwyiEG2QER%2B6DLEKvgjAtcCemmcUK1NFWwyHsIkCDEcMtf8tLbMnq4mB58iEh%2BUTPfI7iPkqiV1M6MwXyw2kLzL4uBBkdA93PT5zoVddDPzCwXVNKPyWa1SCKBK5m9CSooYtGzlvk4ONUQTJGp3tPOq9VuK5B31ijwdaenaaRoI4%2BGIXQRqP0gUAc0RyJW4jXDrABnpRfjGb50gJ7q0%2FbZB%2BjeI0nOS7C87v0twbHo43XXXrNsN7xlob3kx2EfEKtXFFnpDGhdMcrsUFD4LJHkCKQjtt8r%2Fu4dLwGuaJOAGw7qdVV02dTDdTvOO%2BC0VU1KDoUwa%2BfahasHj1WZomV6caXSZ9JWTH4o%2BlOBejnWJE%2Fj79emrhGtdilNqSg%2FsxU5SNF258vdHV1cJC3CKj7MApe3yxYWHgLhMxbw0RIAyGI4PpVVw4VqRmus1KY512%2FpqshRQjICCsfEKLHAEnQviL4jhx8Igw%2Bs%2BH1wY6ogFkJc55fD%2BbclfysMkeNlozJiZSFnY7AX%2BVH64dEqDEqqZwZrEhNU3xzNi2iyQvg2WnFCAZg1lS3oYKy2FmdzM74iUSCLtckAEJ0jxE9q5r5aUQFqKB2VFq28ZNABMzBhhJiNFy7UOGonaiy1L%2FLmwRgFbTL%2BMAfSahfvozlRvrKQM6Wk73Yhs0SCauiW3JZ9cvgrGfSGR8xke97L713Ci65kc%3D&Expires=1793201770",
+      "last_visit": "2026-10-28T10:55:18",
+      "visits_today": 2,
       "visits_yesterday": 4,
       "avg_visits": 3.4,
       "history": [
@@ -3127,6 +3135,10 @@
         {
           "timestamp": "2026-10-28T01:27:09",
           "weight": 3.35
+        },
+        {
+          "timestamp": "2026-10-28T10:55:18",
+          "weight": 3.34
         }
       ]
     }
